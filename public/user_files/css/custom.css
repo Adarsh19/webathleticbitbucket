@@ -1,0 +1,61 @@
+.client-edit {
+position: absolute !important;
+right: 0 !important;
+width: 30px !important;
+left: auto !important;
+top: 4px !important; 
+cursor: pointer;
+}
+.footer-links li{
+	position: relative;
+}
+.footer-links li i{
+	top: 0px !important;
+}
+
+/* drop image block css */
+.drop-image {
+	border: 3px dotted;
+	width: 100%;
+	height: 110px;
+	text-align: center;
+	padding: 35px;
+	font-size: 19px;
+	font-weight: bold;
+}
+.drop-image.has-image{
+	padding: 0px !important;
+}
+.drop-image li{
+	float: left;
+	position: relative;
+	list-style: none;
+}
+.drop-image li img{
+	padding: 4px 0px 0 4px;
+	max-height: 100px;
+}
+.drop-image li span{
+	position: absolute;
+	right: 0;
+	z-index: 999;
+	top: -8px;
+	color: #f00;
+	font-size: 15px;
+	width: 20px;
+	height: 20px;
+	background: #fff;
+	border-radius: 50%;
+	line-height: 20px;
+	border: 1px solid #a8a8a8;
+}
+.drop-image.active-drag{
+	border: 3px dotted #17a2b8;
+}
+#croppie-model .modal-lg.large-image {
+    max-width: 98%;
+    margin: 0 1%;
+}
+#croppie-model .modal-lg.large-image .croppie-container{width: 100% !important; margin: 0 !important; }
+#log img{ width: 200px !important; }
+label.error {color: #C10000;font-size: 0.9em;margin-top: -5px;padding: 0;}

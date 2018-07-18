@@ -1,0 +1,145 @@
+/* Add here all your CSS customizations */
+.icon-edit {position: absolute !important;right: 0 !important;width: 30px !important;left: auto !important;top: 4px !important; cursor: pointer;}
+/* header css */
+	.page-header .right-wrapper{float: right;}
+	.uw-saldo-value { display: inline-block;}
+	.uw-saldo-value span{margin-right: 20px;line-height: 20px;font-size: 20px;display: block;padding: 10px;position: relative;top: 4px;color: #fff;font-weight: 900;}
+	.header-icons-block {display: inline-block;margin-left: 10px;}
+	.header-icons-block a{margin:0 5px;}
+	.header-icons-block a i{font-size: 24px;position: relative;top: 6px;color: #fff;}
+	.header-country-img img{ max-width:30px; }
+
+/* Pages.uses.index */
+.dataTables_wrapper i {position: relative;top: 3px;}
+.dataTables_wrapper span.hvr-grow-shadow {padding: 0 15px;color: #fff;background: #3367b3;line-height: 30px;height: 35px;margin: 0;}
+.dataTables_wrapper .pull-right span.hvr-grow-shadow{position: relative;top: -3px;}
+.dataTables_wrapper a:not(.btn-force) { border: none; padding: 0; background: transparent;margin:0 5px 0px 0px}
+.dataTables_wrapper a.buttons-csv span.hvr-grow-shadow{ background:  #3367b3 ; }
+.dataTables_wrapper a.buttons-excel span.hvr-grow-shadow{ background: #40a20c  ; }
+.dataTables_wrapper a.buttons-pdf span.hvr-grow-shadow{ background:#e72b05  ; }
+.dataTables_wrapper a span{display: block;}
+.dataTables_wrapper .dt-buttons.btn-group {padding: 0px 20px 0 0;display: block;position: relative; float: left;width: 30%;}
+div#datatable-tabletools_filter {float: left;text-align:right;display:block;width:70%;
+    margin: 0 0 30px;}
+div#datatable-tabletools_filter label{ width:40%; float: left;}
+div#datatable-tabletools_filter label input{ height:35px;}
+/*div#datatable-tabletools_filter .pull-right{ text-align: right; }*/
+div#datatable-tabletools_filter select, div#datatable-tabletools_filter span{margin: 0 10px; height:35px; display: inline-block;}
+div#datatable-tabletools_filter select{width:20%;height: 35px;width: 150px;}
+.form-control:not(.form-control-sm):not(.form-control-lg) {font-size: 0.85rem !important; line-height: 0.85 !important;min-height: 0.4rem !important;}
+.page-header a.dash-logo{float: left; width: 200px;display: block;height: 50px;padding: 0 15px;line-height: 50px;}
+.page-header a.dash-logo span{	display:block;}
+.page-header a.dash-logo span img{	max-width:100%;}
+html.fixed.flexbox .inner-wrapper {padding-top: 40px;}
+html.fixed.sidebar-left-collapsed .content-body{padding-top:0px;}
+.sidebar-right-toggle .fa.fa-calendar {color: #ffffff;}
+#reportrange {background: #fff;	cursor: pointer;padding: 5px 10px;border: 1px solid #ccc;width: 32%;text-align: center;display: inline-block;}
+.daterangepicker .ranges {float: right !important;}
+.tab-content ul.simple-user-list li {margin: 0 0 10px;padding: 10px 5px;border-radius: 3px;}
+.tab-content ul.simple-user-list li.msg-0{background: #47a447;color: #fff;}
+.tab-content ul.simple-user-list li.msg-1{background: #f0ac4b;color: #fff;}
+.tab-content ul.simple-user-list li.msg-2{background: #d9514d;color: #fff;}
+.tab-content #message1 .card-body{ padding:0; }
+.tab-content #message2 .card-body{ padding:0; }
+
+
+.modal_with_tabs .modal-content{
+	padding: 0;
+	background: none;
+}
+.modal_with_tabs .modal-body{
+	padding: 0;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.modal_with_tabs .modal-body .tabs{
+	margin-bottom: 0;
+}
+/*
+.modal_show_only_add .tabs .tab-pane{
+	display: none;
+}
+.modal_show_only_add .tabs .tab-content{
+	box-shadow: none;
+	border:none;
+	padding: 0;
+	margin: 0;
+}
+.modal_show_only_add .tabs .tab-pane.tab-add-pane{
+	display: block;
+}
+.modal_show_only_add .tabs .nav.nav-tabs{
+	display: none;
+}
+.modal_show_only_add .modal-header{
+	display: block !important;
+}
+.modal_show_only_add .modal-header .modal-title{
+	display: inline;
+}
+*/
+.modal_with_tabs .tabs .nav.nav-tabs li.disabled a{
+	background: #F4F4F4;
+    border-left: 1px solid #EEE;
+    border-right: 1px solid #EEE;
+    pointer-events: none;
+    color:#bbb !important;
+}
+.modal_show_only_add .tabs .tab-pane{
+	display: none;
+}
+.modal_show_only_add .tabs .tab-pane.tab-add-pane{
+	display: block;
+}
+
+.bulk-delete-modal .checkboxes_field{
+	display: none !important;
+}
+.checkbox-delete-btn{
+	background: #aaa !important;
+}
+.ui-datepicker{
+	z-index: 4000 !important;
+}
+
+#add_user .input-group,
+#update_user .input-group{
+	margin-bottom: 15px;
+}
+#add_user .input-group> label.error,
+#update_user .input-group> label.error{
+	position: absolute;
+	line-height: 1;
+	margin: 0;
+	bottom: -17px;
+}
+
+.dataTables_wrapper a.btn-info{
+	background-color: #5bc0de !important;
+    border-color: #5bc0de #5bc0de #31b0d5 !important;
+    color: #FFF !important;
+    font-size: 0.9rem !important;
+    padding: 0.47rem 0.75rem !important;
+    cursor: pointer !important;
+    display: block !important;
+}
+
+.tbheader label{
+	font-weight: bold;
+}
+#accept-terms{
+	width: 65%;
+	margin: 0 auto;
+	padding: 0 !important;
+	height: 500px;
+	top:50px;
+}
+#accept-terms .modal-dialog{
+	margin: 0 auto;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+#accept-terms .modal-dialog, #accept-terms .modal-content {
+    min-width: 100%;
+    margin: 0 auto;
+}
