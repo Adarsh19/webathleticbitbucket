@@ -22,7 +22,7 @@
                     <div id="userbox" class="userbox">
                         <a href="#" data-toggle="dropdown">
                             <figure class="profile-picture">
-                                <img src="{{ $user->avatar?asset('profile_images/' . $user->avatar):asset('admin_files/img/!logged-user.jpg')}}" alt="{{$user->name}}" class="rounded-circle" data-lock-picture="{{ $user->avatar?asset('profile_images/' . $user->avatar):asset('admin_files/img/!logged-user.jpg')}}" />
+                                <img src="{{ asset('profile_images/' . $user->avatar)}}" alt="{{$user->name}}" class="rounded-circle" data-lock-picture="{{ asset('profile_images/' . $user->avatar)}}" />
                             </figure>
                             <div
                                 class="profile-info" data-lock-lock="{{Session::has('lock')}}" data-lock-url="{{route('admin.unlock')}}" data-lock-token="{{ csrf_token() }}"

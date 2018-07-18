@@ -1,3 +1,3 @@
-<div class="alert alert-success">
-    Successfully Submitted.
+<div class="alert alert-success">
+    Successfully Submitted.
 </div>

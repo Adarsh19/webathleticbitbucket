@@ -15,7 +15,6 @@ use App\ServiceOpeningHours;
 use App\ServiceSchedule;
 use App\ServiceScheduleEvents;
 use App\ServiceScheduleHasUsers;
-use App\TrainingSchedule;
 use App\User;
 use DateInterval;
 use DateTime;
@@ -25,76 +24,74 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Jleon\LaravelPnotify\Notify;
 
-
-
 class RoosterController extends Controller
 {
-
-
-
-    public function __construct(){
-        if (Auth::user()){
+	
+    /**
+     * Construct
+     * 
+     * @return void
+    */
+	public function __construct()
+    {
+        if (Auth::user()) {
             $user = Auth::user();
 
-            if($user->role == 'user'){
+            if ($user->role == 'user') {
                 return redirect()->back()->with(array("fail" => "You have have no authorisation."))->withInput();
             }
         } else {
             return redirect("/")->with(array("fail" => "You have to Login first to access our features."))->withInput();
         }
     }
+	
+	/**
+     * Rooster home page
+     *
+     * @param Request $request
+     * @param integer $user_id
+     * @param integer $schedule_id
+     * @param date $date
+	 * @return view
+    */
+    public function index(Request $request, $user_id = null, $schedule_id = null, $date = null)
+    {
 
-    public  function  index(Request $request,$user_id=null,$schedule_id=null,$date=null){
-
-        $user = User::where('id',$user_id)->first();
-
-        if(!isset($user->id) || $user->role =="user")
-        {
-            abort(404);
-        }
-
+        $user = Auth::user();
         //$id= $user->id;
         $default_first_calendar="";
-        $default_first_calendar_obj=ServiceSchedule::select('id')->where('user_id',$user_id)->first();
+        $default_first_calendar_obj=ServiceSchedule::select('id')->where('user_id', $user_id)->first();
 
         //dd($default_first_calendar_obj->toArray());
         $opening_hours="";
-        if(!empty($default_first_calendar_obj))
+        if (!empty($default_first_calendar_obj)) {
             $default_first_calendar=$default_first_calendar_obj->id;
+        }
         #We show all roles to Admin, But only company added roles to company
-
-
-
-
-        if($user->role == 'admin'){
-            $roles=Role::select('id','role','user_id')->get();
-        }else if($user->role == 'company'){
-            echo $roles=Role::select('id','role','user_id')
-                ->where('user_id',$user_id)
-                ->toSql();
+        if ($user->role == 'admin') {
+            $roles=Role::select('id', 'role', 'user_id')->get();
+        } elseif ($user->role == 'company') {
+            $roles=Role::select('id', 'role', 'user_id')
+                ->where('user_id', $user_id)
+                ->get();
         }
 
-        
 
 
-
-
-
-        $opening_hours_obj=ServiceOpeningHours::where('user_id',$user_id)->first();
+        $opening_hours_obj=ServiceOpeningHours::where('user_id', $user_id)->first();
 
         //dd($opening_hours_obj->toArray());
 
         $opening_hours="";
-        if(!empty($opening_hours_obj))
-          $opening_hours=json_encode($opening_hours_obj->toArray());
+        if (!empty($opening_hours_obj)) {
+            $opening_hours=json_encode($opening_hours_obj->toArray());
+        }
 
 
-        $services=Service::select('id','service','bg_color')->get();
-        $service_schedules=ServiceSchedule::where('user_id',$user_id)->get();
+        $services=Service::select('id', 'service', 'bg_color')->get();
+        $service_schedules=ServiceSchedule::where('user_id', $user_id)->get();
 
-        $companies=Company::select('user_id','company_name')
-            ->where('parent_id',Auth::id())
-            ->get();
+        $companies=Company::select('user_id', 'name')->get();
 
 //        Notify::info("This notice won't fadeout")->sticky();
 //
@@ -102,45 +99,51 @@ class RoosterController extends Controller
 
 
 
-        return view('admin.rooster.index',compact('date','user','service_schedules','roles','opening_hours','default_first_calendar','services','companies'));
+        return view('admin.rooster.index', compact('date', 'user', 'service_schedules', 'roles', 'opening_hours', 'default_first_calendar', 'services', 'companies'));
     }
 
 
-
-    public function updateConnectedUser(Request $request,$rowid)
+	/**
+     * Update connected
+     *
+     * @param Request $request
+     * @param integer $rowid
+     * @param integer $schedule_id
+     * @param date $date
+	 * @return view
+    */
+    public function updateConnectedUser(Request $request, $rowid)
     {
 
 
         $parent_userid=Auth::id();
-        $connectedup = CalendarConnectedUser::where('parent_user_id',$parent_userid)
-            ->where('id',$rowid)  //user_id here is the row id basically
+        $connectedup = CalendarConnectedUser::where('parent_user_id', $parent_userid)
+            ->where('id', $rowid)  //user_id here is the row id basically
             ->update([
                 'user_color_code' => $request->color,'user_id'=>$request->user_id,
             ]);
         if ($connectedup) {
-            Notify::success($request->user_name . " Successfully updated");
+            return redirect()->back()->with('message', $request->user_name . " Successfully updated");
         } else {
-            Notify::error("Some error occurred while updating user");
+            return redirect()->back()->with('exception', "Some error occurred while updating user");
         }
-        return redirect()->back();
-
     }
 
 
-    public function saveConnectedUser(Request $request){
+    public function saveConnectedUser(Request $request)
+    {
 
 
          $parent_userid=Auth::id();
-         $ispresant=CalendarConnectedUser::where('parent_user_id',$parent_userid)
-            ->where('schedule_id',$request->schedule_id)
-            ->where('user_id',$request->user_id)
+         $ispresant=CalendarConnectedUser::where('parent_user_id', $parent_userid)
+            ->where('schedule_id', $request->schedule_id)
+            ->where('user_id', $request->user_id)
             ->first();
 
 
 
 
-        if(empty($ispresant)) {
-
+        if (empty($ispresant)) {
             $connected = CalendarConnectedUser::create([
                 'parent_user_id' => $parent_userid,
                 'user_id' => $request->user_id,
@@ -149,40 +152,34 @@ class RoosterController extends Controller
             ]);
 
             if ($connected) {
-                Notify::success($request->user_name . " Successfully added");
+                return redirect()->back()->with('message', $request->user_name . " Successfully added");
             } else {
-                Notify::error("Some error occurred while adding user");
+                return redirect()->back()->with('exception', "Some error occurred while adding user");
             }
-
-
-
-
-        }else{
-            Notify::info("User already added in this schedule");
-
-
+        } else {
+            return redirect()->back()->with('exception', "User already added in this schedule");
         }
-        return redirect()->back();
     }
 
-    public function deleteConnectedUser(Request $request,$userid){
+    public function deleteConnectedUser(Request $request, $userid)
+    {
         $parent_userid=Auth::id();
-        $ispresant_del=CalendarConnectedUser::where('parent_user_id',$parent_userid)
-            ->where('user_id',$userid)
+        $ispresant_del=CalendarConnectedUser::where('parent_user_id', $parent_userid)
+            ->where('user_id', $userid)
             ->delete();
-        if($ispresant_del){
-            Notify::success(" Successfully disconnected");
-        }else{
-            Notify::error("Some error occurred while diconnecting  user");
+        if ($ispresant_del) {
+            return redirect()->back()->with('message', " Successfully disconnected");
+        } else {
+            return redirect()->back()->with('exception', "Some error occurred while diconnecting  user");
         }
-        return redirect()->back();
     }
 
-    public function  searchUsers(Request $request,$type,$keyword,$service_id){
+    public function searchUsers(Request $request, $type, $keyword, $service_id)
+    {
         $parent_id=Auth::id();
-        $service=Service::where('id',$service_id)->first();
-        $users=User::select('users.*','calendar_connected_users.user_color_code')
-            ->leftjoin('calendar_connected_users','calendar_connected_users.user_id','users.id')
+        $service=Service::where('id', $service_id)->first();
+        $users=User::select('users.*', 'calendar_connected_users.user_color_code')
+            ->leftjoin('calendar_connected_users', 'calendar_connected_users.user_id', 'users.id')
             ->where('name', 'like', '%'.$keyword.'%')
             ->where('users.parent_id', '=', $parent_id)
             ->get();
@@ -192,17 +189,18 @@ class RoosterController extends Controller
 //
 //        }
 
-        return view('admin.rooster.search_users', compact('users','service','type'));
-
+        return view('admin.rooster.search_users', compact('users', 'service', 'type'));
     }
 
-    public function addServiceSchedule(Request $request){
+    public function addServiceSchedule(Request $request)
+    {
 
 
         $user_id=$request->user_id;
-        if(!isset($user_id))
+        if (!isset($user_id)) {
             $user_id=Auth::id();
-        if(empty(ServiceSchedule::where('title','like','%'.$request->schedule_title.'%')->where('user_id',$user_id)->first())){
+        }
+        if (empty(ServiceSchedule::where('title', 'like', '%'.$request->schedule_title.'%')->where('user_id', $user_id)->first())) {
             $createschedule=ServiceSchedule::create([
                 'title'=>$request->schedule_title,
                 'user_id'=>$request->user_id,
@@ -210,32 +208,29 @@ class RoosterController extends Controller
                 'color'=>$request->color,
                 'dragdrop'=>isset($request->drag)?1:0,
             ]);
-            if($createschedule){
-                Notify::success($request->schedule_title." Successfully created");
-            }else{
-                Notify::success("Some error occurred while creating   schedule ".$request->schedule_title);
+            if ($createschedule) {
+                return redirect()->back()->with('message', $request->schedule_title." Successfully created");
+            } else {
+                return redirect()->back()->with('fail', "Some error occurred while creating   schedule ".$request->schedule_title);
             }
-        }else{
-            Notify::success("You are trying to create duplicate schedule ".$request->schedule_title);
-
+        } else {
+            return redirect()->back()->with('exception', "You are trying to create duplicate schedule ".$request->schedule_title);
         }
-        return redirect()->back();
-
-
     }
-    public function editServiceSchedule(Request $request,$schedule_id){
+    public function editServiceSchedule(Request $request, $schedule_id)
+    {
 
 
 
         $user_id=Auth::id();
 
-        $is_presant=ServiceSchedule::where('user_id',$user_id)->where('id',$schedule_id)->first();
+        $is_presant=ServiceSchedule::where('user_id', $user_id)->where('id', $schedule_id)->first();
 
-        if(!empty($is_presant)){
+        if (!empty($is_presant)) {
             $dragdrop=isset($request->drag) ? 1:0;
 
 
-            $updateshedule=ServiceSchedule::where('id',$schedule_id)->
+            $updateshedule=ServiceSchedule::where('id', $schedule_id)->
             update([
                 'title'=>$request->schedule_title,
                 'user_id'=>$user_id,
@@ -244,133 +239,113 @@ class RoosterController extends Controller
                 'color'=>$request->color
             ]);
 
-            if($updateshedule){
-                Notify::success($request->schedule_title." Successfully created");
-            }else{
-                Notify::error("Some error occurred while creating   schedule ".$request->schedule_title);
+            if ($updateshedule) {
+                return redirect()->back()->with('message', $request->schedule_title." Successfully created");
+            } else {
+                return redirect()->back()->with('fail', "Some error occurred while creating   schedule ".$request->schedule_title);
             }
-        }else{
-            Notify::info("You are trying to create duplicate schedule/or you are not authorized to update this schedule ".$request->schedule_title);
-
-
+        } else {
+            return redirect()->back()->with('exception', "You are trying to create duplicate schedule/or you are not authorized to update this schedule ".$request->schedule_title);
         }
-        return redirect()->back();
-
-
     }
 
 
-    public function deleteServiceSchedule(Request $request,$schedule_id){
+    public function deleteServiceSchedule(Request $request, $schedule_id)
+    {
 
         $user_id=Auth::id();
-        if(!empty(ServiceSchedule::where('user_id',$user_id)->where('id',$schedule_id)->first())){
-            $deleteshedule=ServiceSchedule::where('id',$schedule_id)->delete();
-            if($deleteshedule){
-                Notify::success(" Successfully deleted");
-            }else{
-                Notify::error("Some error occurred while deleting schedule ");
+        if (!empty(ServiceSchedule::where('user_id', $user_id)->where('id', $schedule_id)->first())) {
+            $deleteshedule=ServiceSchedule::where('id', $schedule_id)->delete();
+            if ($deleteshedule) {
+                return redirect()->back()->with('message', "Successfully deleted");
+            } else {
+                return redirect()->back()->with('fail', "Some error occurred while deleting schedule ");
             }
-        }else{
-            Notify::info("Schedule not found or you don't have permissions to delete");
+        } else {
             return redirect()->back()->with('exception', "Schedule not found or you don't have permissions to delete");
-
         }
-        return redirect()->back();
-
-
     }
 
-    public function loadConnectedUsers(Request $request,$userid){
+    public function loadConnectedUsers(Request $request, $userid)
+    {
 
 //        dd($userid);
         $parent_userid=Auth::id();
-        $connected_users=CalendarConnectedUser::select('calendar_connected_users.id as id','calendar_connected_users.user_color_code','calendar_connected_users.user_id','users.name')
-            ->leftjoin('users','users.id','calendar_connected_users.user_id')
+        $connected_users=CalendarConnectedUser::select('calendar_connected_users.id as id', 'calendar_connected_users.user_color_code', 'calendar_connected_users.user_id', 'users.name')
+            ->leftjoin('users', 'users.id', 'calendar_connected_users.user_id')
             //->where('calendar_connected_users.user_id',$userid)
-            ->where('calendar_connected_users.parent_user_id',$parent_userid)
-            ->where('users.parent_id',$parent_userid)
+            ->where('calendar_connected_users.parent_user_id', $parent_userid)
+            ->where('users.parent_id', $parent_userid)
             ->get();
         return view('admin.rooster.connected_users', compact('connected_users'));
     }
 
-    private function getrecurrence($request){
+    private function getrecurrence($request)
+    {
         $rule="";
-        if(isset($request->recurringtype)){
-            if($request->recurringtype=="daily"){
-                if($request->countuingselect=="forever"){
+        if (isset($request->recurringtype)) {
+            if ($request->recurringtype=="daily") {
+                if ($request->countuingselect=="forever") {
                     $rule="FREQ=DAILY;INTERVAL=".$request->numberrecur;
-                }
-                else if($request->countuingselect=="for"){
+                } elseif ($request->countuingselect=="for") {
                     $rule="FREQ=DAILY;INTERVAL=".$request->numberrecur.";COUNT=".$request->untilnumber;
-                }
-                else if($request->countuingselect=="untill"){
+                } elseif ($request->countuingselect=="untill") {
                     $rule="FREQ=DAILY;INTERVAL=".$request->numberrecur.";UNTIL=".$request->date_untill_recur; //20180515T235959Z
                 }
-            }
-            else if($request->recurringtype=="weekly"){
-                $days=implode(",",$request->days);
-                if($request->countuingselect=="forever"){
+            } elseif ($request->recurringtype=="weekly") {
+                $days=implode(",", $request->days);
+                if ($request->countuingselect=="forever") {
                     $rule="FREQ=WEEKLY;INTERVAL=$request->numberrecur;BYDAY=".$days;
-                }
-                else if($request->countuingselect=="for"){
+                } elseif ($request->countuingselect=="for") {
                     $rule="FREQ=WEEKLY;INTERVAL=".$request->numberrecur.";BYDAY=".$days.";COUNT=".$request->untilnumber;
-                }
-                else if($request->countuingselect=="untill"){
+                } elseif ($request->countuingselect=="untill") {
                     $rule="FREQ=WEEKLY;INTERVAL=$request->numberrecur;BYDAY=".$days.";UNTIL=".$request->date_untill_recur; //20180515T235959Z
                 }
-            }
-
-            else if($request->recurringtype=="monthly"){
-                if($request->countuingselect=="forever"){
+            } elseif ($request->recurringtype=="monthly") {
+                if ($request->countuingselect=="forever") {
                     $rule="FREQ=MONTHLY;INTERVAL=".$request->numberrecur.";BYMONTHDAY=".$request->monthday;
-                }
-                else if($request->countuingselect=="for"){
+                } elseif ($request->countuingselect=="for") {
                     $rule="FREQ=MONTHLY;INTERVAL=".$request->numberrecur.";BYMONTHDAY=".$request->monthday.";COUNT=".$request->untilnumber;
-                }
-                else if($request->countuingselect=="untill"){
+                } elseif ($request->countuingselect=="untill") {
                     $rule="FREQ=MONTHLY;INTERVAL=".$request->numberrecur.";BYMONTHDAY=".$request->monthday.";UNTIL=".$request->date_untill_recur; //20180515T235959Z
                 }
-            }
-            else if($request->recurringtype=="yearly"){
-                if($request->countuingselect=="forever"){
-                    if(isset($request->dayinmonth))
+            } elseif ($request->recurringtype=="yearly") {
+                if ($request->countuingselect=="forever") {
+                    if (isset($request->dayinmonth)) {
                         $rule="FREQ=YEARLY;INTERVAL=".$request->numberrecur.";BYMONTH=".$request->month.";BYDAY=".$request->yearday;
-                    else
+                    } else {
                         $rule="FREQ=YEARLY;BYMONTH=".$request->month;
-                }
-                else if($request->countuingselect=="for"){
-                    if(isset($request->dayinmonth))
+                    }
+                } elseif ($request->countuingselect=="for") {
+                    if (isset($request->dayinmonth)) {
                         $rule="FREQ=YEARLY;INTERVAL=".$request->numberrecur.";BYMONTH=".$request->month.";BYDAY=".$request->yearday.";COUNT=5".$request->untilnumber;
-                    else
+                    } else {
                         $rule="FREQ=YEARLY;BYMONTH=".$request->month.";COUNT=".$request->untilnumber;
-                }
-                else if($request->countuingselect=="untill"){
-                    if(isset($request->dayinmonth))
+                    }
+                } elseif ($request->countuingselect=="untill") {
+                    if (isset($request->dayinmonth)) {
                         $rule="FREQ=YEARLY;INTERVAL=".$request->numberrecur.";BYMONTH=".$request->month.";BYDAY=".$request->yearday.";UNTIL=".$request->date_untill_recur; //20180515T235959Z
-                    else
+                    } else {
                         $rule="FREQ=YEARLY;BYMONTH=".$request->month.";UNTIL=".$request->date_untill_recur;
+                    }
                 }
             }
         }
         return $rule;
-
     }
 
 
-    private function addEvent($request,$type){
+    private function addEvent($request, $type)
+    {
 
 
 
         $rule="";
-        if($type=="create")
-        {
-
-
-            echo $rule=$this->getrecurrence($request);
-        }else{
+        if ($type=="create") {
+            $rule=$this->getrecurrence($request);
+        } else {
             //$rule=$request->rule;
-
-            echo $rule=$this->getrecurrence($request);
+            $rule=$this->getrecurrence($request);
         }
 
 
@@ -382,25 +357,23 @@ class RoosterController extends Controller
         $url=(isset($request->url))? $request->url: '';
         $reminder=(isset($request->url))? $request->url: '';
         $start=$end="";
-        if(isset($request->allday)){
+        if (isset($request->allday)) {
             $start = date('Y-m-d H:i:s', strtotime($request->date_from));
             $end = date('Y-m-d H:i:s', strtotime($request->date_untill));
+        } else {
+            $start = date('Y-m-d', strtotime($request->date_from)) ." ".$request->time_from.":00";
+
+             $end = date('Y-m-d', strtotime($request->date_untill)) ." ".$request->time_untill.":00";
         }
-        else{
-             $start = date('Y-m-d', strtotime($request->date_from)) ." ".$request->time_from.":00";
-
-
-
-              $end = date('Y-m-d', strtotime($request->date_untill)) ." ".$request->time_untill.":00";
-        }
-
 
         $date1Timestamp = strtotime($start);
         $date2Timestamp = strtotime($end);
         //$duration = $date2Timestamp - $date1Timestamp;
-        $duration=round(abs($date2Timestamp - $date1Timestamp) / 60,2)." minute";
+        $duration=round(abs($date2Timestamp - $date1Timestamp) / 60, 2)." minute";
 
-        $servicemname=Service::select('service','bg_color','user_mass')->where('id',$request->service)->first();
+        $servicemname=Service::select('service', 'bg_color', 'user_mass')->where('id', $request->service)->first();
+
+
 
         $create=ServiceScheduleEvents::create([
 
@@ -422,115 +395,76 @@ class RoosterController extends Controller
             'all_day'=>$allday,
 
         ]);
-        if($create){
-        $success=true;
+        if ($create) {
+            $success=true;
         }
 
         #Save Users
 
 
-
-
-        if(isset($request->user_ids)){
+        if (isset($request->user_ids)) {
             $user_max=$servicemname->user_mass;
             $i=1;
-            $servicehas=array();
-            foreach($request->user_ids as $users){
-                if($users != null){
-                    if($i > $user_max)
-                        $book=0;
-                    else
-                        $book=1;
-                    $i++;
-                    $servicehas[]=array("user_id"=>$users,"service_schedule_id"=>$request->schedule_id,"bookflag"=>$book);
+            foreach ($request->user_ids as $users) {
+                if ($i > $user_max) {
+                    $book=0;
+                } else {
+                    $book=1;
                 }
-
-
+                $i++;
+                $servicehas[]=array("user_id"=>$users,"service_schedule_id"=>$request->schedule_id,"bookflag"=>$book);
             }
 
-            if(count($servicehas))
             $save_relations=ServiceScheduleHasUsers::insert($servicehas);
         }
 
 
 
-      return $success;
-
-
-
-
+        return $success;
     }
 
 
 
 
-    public function saveScheduleEvent(Request $request){
+    public function saveScheduleEvent(Request $request)
+    {
 
-        $success=$this->addEvent($request,'create');
-        if($success){
-            Notify::success("Schedule Successfully Create");
+        $success=$this->addEvent($request, 'create');
+        if ($success) {
+            return redirect()->back()->with('message', "Schedule Successfully Create");
+        } else {
+            return redirect()->back()->with('exception', "Some error occurred while creating, please try again later");
         }
-        else{
-            Notify::error("Some error occurred while creating, please try again later");
-
-        }
-        return redirect()->back();
-
     }
 
-    public  function  loadEvents(Request $request,$scheduleid){
+    public function loadEvents(Request $request, $scheduleid)
+    {
 
          $start=$request->start;
          $end=$request->end;
         $events=ServiceScheduleEvents::
 
-        where(function($queryout) use ($start,$end){
-            $queryout->where(function($query) use ($start,$end){
-                $query->where('start','>=',$start)
-                    ->where('start','<=',$end);
+        where(function ($queryout) use ($start, $end) {
+            $queryout->where(function ($query) use ($start, $end) {
+                $query->where('start', '>=', $start)
+                    ->where('start', '<=', $end);
             })
-                ->orwhere(function($query2) use ($start,$end){
-                    $query2->where('end','>=',$start)
-                        ->where('end','<=',$end);
+                ->orwhere(function ($query2) use ($start, $end) {
+                    $query2->where('end', '>=', $start)
+                        ->where('end', '<=', $end);
                 })
-                ->orwhere(function($query3) use ($start,$end){
-                    $query3->where('start','<=',$start)
-                        ->where('end','>=',$end);
+                ->orwhere(function ($query3) use ($start, $end) {
+                    $query3->where('start', '<=', $start)
+                        ->where('end', '>=', $end);
                 });
-        })->where('service_schedule_id','=',$scheduleid)
+        })->where('service_schedule_id', '=', $scheduleid)
 
         ->get();
-
-
-
-
-        $trainignEvents=TrainingSchedule::leftjoin('training_schema','training_schema.id','training_schedule.schema_id')
-//            ->where('training_schema.parent_id',1)
-            ->get();
-
-
-
 
         $matches = array();
         foreach ($events->toArray() as $event) {
             //$matches=$event;
             $ins=generateInstances($event, $start, $end);
-
-            $matches = array_merge($matches, $ins);
-        }
-
-
-        foreach ($trainignEvents->toArray() as $event) {
-            //$matches=$event;
-            $event['duration']=$event['duration'];
-            $event['start']=$event['startdate'];
-            $event['end']=$event['enddate'];
-            $event['title']=$event['schema_name'];
-            $event['parent_id']=$event['parent_id'];
-            $ins=generateInstances($event, $start, $end);
-
-
-
 
             $matches = array_merge($matches, $ins);
         }
@@ -546,7 +480,8 @@ class RoosterController extends Controller
 
 
 
-    public  function updateEvent(Request $request,$schedule_id) {
+    public function updateEvent(Request $request, $schedule_id)
+    {
         $date_format = 'Y-m-d H:i:s';
 
         $event=$request->input();
@@ -577,17 +512,13 @@ class RoosterController extends Controller
         );
 
         if ($editMode) {
-
-
-
-
             // This is a recurring event, so determine how to handle it.
             // First, load the original master event for this instance:
             //$master_event = $db->select('events', $event[$mappings['orig_event_id']]);
 
             //dd($request->input());
 
-            $master_event=ServiceScheduleEvents::where('id',$request->orig_event_id)->first()->toArray();
+            $master_event=ServiceScheduleEvents::where('id', $request->orig_event_id)->first()->toArray();
             // Select by id returns an array of one item, so grab it
             //$master_event = $master_event[0];
             $event_id = $master_event['id'];
@@ -610,7 +541,7 @@ class RoosterController extends Controller
                     // original event does not need to be updated in this case):
 
 
-                    $this->addEvent($request,'create');
+                    $this->addEvent($request, 'create');
 
                     // Add an exception for the original occurrence start date
                     // so that the original instance will not be displayed:
@@ -650,7 +581,7 @@ class RoosterController extends Controller
                     $master_event = endDateRecurringSeries($master_event, $endDate);
                     // Persist changes:
 
-                    update('service_events', $master_event,$schedule_id);
+                    update('service_events', $master_event, $schedule_id);
 
                     // Now create the new event for the updated future series.
                     // Update the recurrence instance start date to the edited date:
@@ -669,13 +600,11 @@ class RoosterController extends Controller
 //                    dd($request->input());
 
                     //$event = insert('service_events', cleanEvent($event));
-                    $event= $this->addEvent($request,"update");
+                    $event= $this->addEvent($request, "update");
 
                     break;
 
                 case 'all':
-
-
                     $event['start']=$event['date_from']." ".$event['time_from'];
                     $event['end']=$event['date_untill']." ".$event['time_untill'];
                     // Make sure the id is the original id, not the instance id:
@@ -683,7 +612,9 @@ class RoosterController extends Controller
                     // Base duration off of the current instance start / end since the end
                     // date for the series will be some future date:
                     $event['duration'] = calculateDuration(
-                        $event['start'], $event['end']);
+                        $event['start'],
+                        $event['end']
+                    );
                     // In case the start date was edited by the user, we need to update the
                     // original event to use the new start date
                     $instanceStart = new DateTime($event['recur_instance_start']);
@@ -698,8 +629,10 @@ class RoosterController extends Controller
                     // to the original series start date. Fun!
                     if ($startDiff->days === 0) {
                         // Capture any edited time diff before we overwrite the start date
-                        $startTimeDiff = calculateDuration($event['recur_instance_start'],
-                            $event['start']);
+                        $startTimeDiff = calculateDuration(
+                            $event['recur_instance_start'],
+                            $event['start']
+                        );
 
                         // The start date has not changed, so revert to the
                         // original series start since we are updating the master event
@@ -711,8 +644,7 @@ class RoosterController extends Controller
                             $seriesStart = new DateTime($event['start']);
                             if ($startTimeDiff > 0) {
                                 $interval = new DateInterval('PT'.$startTimeDiff.'M');
-                            }
-                            else {
+                            } else {
                                 // Goofy logic required to handle negative diffs correctly for PHP
                                 $interval = new DateInterval('PT'.(-1 * $startTimeDiff).'M');
                                 $interval->invert = 1; // Good old PHP
@@ -759,35 +691,31 @@ class RoosterController extends Controller
                     $eventu = update('service_events', $eventup);
 
 
-                    $servicemname=Service::select('user_mass')->where('id',$event['service_id'])->first();
+                    $servicemname=Service::select('user_mass')->where('id', $event['service_id'])->first();
 
                     //echo $event['service_id'];
 //                    dd($event);
 
-                    $delete_all_first=ServiceScheduleHasUsers::where('service_schedule_id',$schedule_id)->delete();
+                    $delete_all_first=ServiceScheduleHasUsers::where('service_schedule_id', $schedule_id)->delete();
 
 
-                    if(isset($request->user_ids)) {
+                    if (isset($request->user_ids)) {
                         $user_max = $servicemname->user_mass;
                         $i = 1;
                         foreach ($request->user_ids as $users) {
-                            if ($i > $user_max)
+                            if ($i > $user_max) {
                                 $book = 0;
-                            else
+                            } else {
                                 $book = 1;
+                            }
                             $i++;
                             $servicehas[] = array("user_id" => $users, "service_schedule_id" => $schedule_id, "bookflag" => $book);
-
                         }
 
                         $save_relations = ServiceScheduleHasUsers::insert($servicehas);
                     }
-
-
-
             }
-        }
-        else {
+        } else {
 //            if ($event[$mappings['rrule']]) {
 //                // There was no recurrence edit mode, but there is an rrule, so this was
 //                // an existing non-recurring event that had recurrence added to it. Need
@@ -808,21 +736,16 @@ class RoosterController extends Controller
 //            $event = $db->update('events', cleanEvent($event));
         }
 
-        if($event){
-            Notify::success("Schedule Successfully Updated");
+        if ($event) {
+            return redirect()->back()->with('message', "Schedule Successfully Updated");
+        } else {
+            return redirect()->back()->with('exception', "Some error occurred while updating, please try again later");
         }
-        else{
-            Notify::error("Some error occurred while updating, please try again later");
-
-        }
-        return redirect()->back();
-
-
-
     }
 
 
-    function deleteEvent(Request $request) {
+    function deleteEvent(Request $request)
+    {
 //        global $db, $mappings;
 
 
@@ -832,7 +755,7 @@ class RoosterController extends Controller
         if ($editMode) {
             // This is a recurring event, so determine how to handle it.
             // First, load the original master event for this instance:
-            $master_event = ServiceScheduleEvents::where('id',$event['orig_event_id'])->first()->toArray();
+            $master_event = ServiceScheduleEvents::where('id', $event['orig_event_id'])->first()->toArray();
 //            dd($event);
 //            dd($master_event);
             // Select by id returns an array of one item, so grab it
@@ -866,36 +789,30 @@ class RoosterController extends Controller
 
                 case 'all':
                     // Actually destroy the master event and remove any existing exceptions
-                    $del=ServiceScheduleEvents::where('id',$event_id)->delete();
+                    $del=ServiceScheduleEvents::where('id', $event_id)->delete();
                     $rem=removeExceptionDates($event_id);
                     print_r($del);
                     print_r($rem);
                     break;
             }
-        }
-        else {
+        } else {
             // This is a plain old non-recurring event, nuke it
             $event_id = $event['orig_event_id'];
-            ServiceScheduleEvents::where('id',$event_id)->delete();
+            ServiceScheduleEvents::where('id', $event_id)->delete();
             removeExceptionDates($event_id);
         }
 
-        Notify::success("Schedule Successfully Deleted");
-            return redirect()->back();
-
+            return redirect()->back()->with('message', "Schedule Successfully Deleted");
     }
 
-    public  function  loadBookReservateUsers(Request $request,$schedule_id){
-        $connected_users_with_service=ServiceScheduleHasUsers::select('users.id','users.name','calendar_connected_users.user_color_code','service_schedule_has_users.bookflag')
-            ->leftjoin('users','users.id','service_schedule_has_users.user_id')
-            ->leftjoin('calendar_connected_users','users.id','calendar_connected_users.user_id')
-            ->where('service_schedule_has_users.service_schedule_id',$schedule_id)->groupby('service_schedule_has_users.user_id')->get();
+    public function loadBookReservateUsers(Request $request, $schedule_id)
+    {
+        $connected_users_with_service=ServiceScheduleHasUsers::select('users.id', 'users.name', 'calendar_connected_users.user_color_code', 'service_schedule_has_users.bookflag')
+            ->leftjoin('users', 'users.id', 'service_schedule_has_users.user_id')
+            ->leftjoin('calendar_connected_users', 'users.id', 'calendar_connected_users.user_id')
+            ->where('service_schedule_has_users.service_schedule_id', $schedule_id)->groupby('service_schedule_has_users.user_id')->get();
 
 //        dd($connected_users_with_service->toArray());
         return view('admin.rooster.connected_users_with_service', compact('connected_users_with_service'));
-
     }
-
-
-
 }

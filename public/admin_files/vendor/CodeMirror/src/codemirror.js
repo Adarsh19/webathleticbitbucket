@@ -1,3 +1,3 @@
-import { CodeMirror } from "./edit/main"
-
-export default CodeMirror
+import { CodeMirror } from "./edit/main"
+
+export default CodeMirror

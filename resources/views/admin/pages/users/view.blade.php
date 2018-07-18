@@ -253,8 +253,7 @@ if(isset($user->activation_status) && !empty($user->activation_status)) $incr+=5
                                                        <span class="input-group-addon">
                                                             <i class="fa fa-calendar"></i>
                                                         </span>
-                                                    <input  type="text" id="userBirthDay" name="birthday" value="{{ $user->birthday }}" class="form-control"
-                                                    data-plugin-datepicker data-plugin-options='{ "multidate": false }' placeholder="dd.mm.yyyy">
+                                                    <input  type="text" id="userBirthDay" name="birthday" value="{{ $user->birthday }}" class="form-control" placeholder="dd.mm.yyyy">
                                                         <span class="text-danger role-error"></span>
                                                         </div>
                                                 </div>
@@ -295,7 +294,7 @@ if(isset($user->activation_status) && !empty($user->activation_status)) $incr+=5
                                                        <span class="input-group-addon">
                                                             <i class="fa fa-calendar"></i>
                                                         </span>
-                                                        <input  type="text" id="klant_sinds" name="klant_sinds" value="{{ $user->klant_sinds }}" data-plugin-datepicker data-plugin-options='{ "multidate": false }' class="form-control" placeholder="dd.mm.yyyy">
+                                                        <input  type="text" id="klant_sinds" name="klant_sinds" value="{{ $user->klant_sinds }}" class="form-control" placeholder="dd.mm.yyyy">
                                                         <span class="text-danger role-error"></span>
                                                         </div>
                                                 </div>

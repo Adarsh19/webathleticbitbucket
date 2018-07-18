@@ -174,12 +174,7 @@
                                                        <span class="input-group-addon">
                                                             <i class="fa fa-building"></i>
                                                         </span>
-                                                        <select name="Soort" class="form-control">
-                                                            
-                                                        @foreach($user_statuses as $user_status)
-                                                            <option value="{{$user_status->id}}" {{ (($company->Soort == $user_status->id)?'selected=true':'') }} >{{$user_status->status}}</option>
-                                                        @endforeach
-                                                        </select>
+                                                        <input type="text" name="Soort" class="form-control" id="surname" value="{{$company->Soort}}">
                                                         <span class="text-danger role-error"></span>
                                                     </div>
                                                 </div>
@@ -398,7 +393,7 @@
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-mars"></i>
                                                         </span>
-                                                         <input type="text" name="slug" class="form-control" id="slug" value="{{$company->slug}}">
+                                                         <input type="text" name="slug" class="form-control" id="slug" value="">
                                                         <span class="text-danger slug-error"></span>
                                                     </div>
                                                 </div>

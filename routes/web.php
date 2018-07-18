@@ -24,6 +24,7 @@
 Route::group(['middleware' => 'role'], function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function () {
 
+        Route::get('resource', array('as'=>'viewResource', 'uses' => 'ResourceController@resource'));
         Route::get('/screen-lock', ['as' => 'screen-lock', 'uses' => 'DashboardController@screenLock']);
         Route::post('/unlock', ['as' => 'unlock', 'uses' => 'DashboardController@unlock']);
     
@@ -35,185 +36,138 @@ Route::group(['middleware' => 'role'], function () {
         Route::post('/image-update/{company_id}', ['as' => 'imageupdate', 'uses' => 'UserController@updateImage']);
         #NOTE FOR OTHER TEAM, YOU CAN ADD THESE ROUTES INSIDE ABOVE ADMINPREFIX group,  but need to add 'as' => 'admin.'
         /***** Admin Rooster Start here*****/
-        Route::get('/rooster/load-connected-users/{userid}',['as'=>'loadConnectedUsersRqst','uses'=>'RoosterController@loadConnectedUsers']);
-    Route::get('/rooster/load-booked-reservate-users/{schedule_id}',['as'=>'loadBookedReservatedUsersRqst','uses'=>'RoosterController@loadBookReservateUsers']);
-    #NOTE FOR OTHER TEAM, YOU CAN ADD THESE ROUTES INSIDE ABOVE ADMINPREFIX group,  but need to add 'as' => 'admin.'
-    /***** Admin Rooster Start here*****/
-    Route::get('/rooster/searchuser/{type}/{keyword}/{service_id}',['as'=>'rooster.searchuser','uses'=>'RoosterController@searchUsers']);
+        Route::get('/rooster/searchuser/{type}/{keyword}/{service_id}', ['as'=>'rooster.searchuser','uses'=>'RoosterController@searchUsers']);
 
-    Route::get('/rooster/loadEvents/{scheduleid}',['as'=>'rooster.loadEvents','uses'=>'RoosterController@loadEvents']);
-//    Route::get('/rooster/{usrid}',['as'=>'roosterRqst','uses'=>'RoosterController@index']);
-    Route::get('/rooster/{usrid}/{schedule_id?}/{date?}',['as'=>'roosterRqst','uses'=>'RoosterController@index']);
+        Route::get('/rooster/loadEvents/{scheduleid}', ['as'=>'rooster.loadEvents','uses'=>'RoosterController@loadEvents']);
+        Route::get('/rooster/{usrid}/{schedule_id?}/{date?}', ['as'=>'roosterRqst','uses'=>'RoosterController@index']);
+        //Route::get('/rooster/{schedule_id}/{date}','RoosterController@index');
 
-    Route::post('/rooster/addServiceSchedule',['as'=>'addServiceScheduleRqst','uses'=>'RoosterController@addServiceSchedule']);
-    Route::post('/rooster/editSchedule/{schedule_id}',['as'=>'editScheduleTabRqst','uses'=>'RoosterController@editServiceSchedule']);
+        Route::post('/rooster/addServiceSchedule', ['as'=>'addServiceScheduleRqst','uses'=>'RoosterController@addServiceSchedule']);
+        Route::post('/rooster/editSchedule/{schedule_id}', ['as'=>'editScheduleTabRqst','uses'=>'RoosterController@editServiceSchedule']);
 
-    Route::delete('/rooster/deleteSchedule/{schedule_id}',['as'=>'deleteScheduleRqst','uses'=>'RoosterController@deleteServiceSchedule']);
+        Route::delete('/rooster/deleteSchedule/{schedule_id}', ['as'=>'deleteScheduleRqst','uses'=>'RoosterController@deleteServiceSchedule']);
 
-    Route::post('/rooster/saveConnectedUser',['as'=>'saveConnectedUserRqst','uses'=>'RoosterController@saveConnectedUser']);
-    Route::post('/rooster/updateConnectedUser/{rowid}',['as'=>'updateConnectedUserRqst','uses'=>'RoosterController@updateConnectedUser']);
-    Route::delete('/rooster/deleteConnectedUser/{userid}',['as'=>'deleteConnectedUserRqst','uses'=>'RoosterController@deleteConnectedUser']);
-    Route::post('/rooster/saveScheduleEvent',['as'=>'saveScheduleEventRqst','uses'=>'RoosterController@saveScheduleEvent']);
-    Route::post('/rooster/editServiceSchedule/{schedule_id}',['as'=>'editServiceScheduleRqst','uses'=>'RoosterController@updateEvent']);
-    Route::post('/rooster/deleteServiceSchedule',['as'=>'deleteServiceScheduleRqst','uses'=>'RoosterController@deleteEvent']);
+        Route::post('/rooster/saveConnectedUser', ['as'=>'saveConnectedUserRqst','uses'=>'RoosterController@saveConnectedUser']);
+        Route::post('/rooster/updateConnectedUser/{rowid}', ['as'=>'updateConnectedUserRqst','uses'=>'RoosterController@updateConnectedUser']);
+        Route::delete('/rooster/deleteConnectedUser/{userid}', ['as'=>'deleteConnectedUserRqst','uses'=>'RoosterController@deleteConnectedUser']);
+        Route::post('/rooster/saveScheduleEvent', ['as'=>'saveScheduleEventRqst','uses'=>'RoosterController@saveScheduleEvent']);
+        Route::post('/rooster/editServiceSchedule/{schedule_id}', ['as'=>'editServiceScheduleRqst','uses'=>'RoosterController@updateEvent']);
+        Route::post('/rooster/deleteServiceSchedule', ['as'=>'deleteServiceScheduleRqst','uses'=>'RoosterController@deleteEvent']);
 //    Route::get('/rooster/load-calendar/{scheduleid}',['as'=>'loadCalendarScheduleRqst','uses'=>'RoosterController@loadCalendarSchedule']);
     
     
     
-       /**** Exercises Routes here*****/
-    Route::get('/exercises/{userid}', ['as' => 'exercisesViewRqst', 'uses' => 'ExercisesController@exerciseView']);
-    Route::get('/exercises/edit/{userid}/{scheduleid}', ['as' => 'editExercisesScheduleRqst', 'uses' => 'ExercisesController@editExerciseView']);
-    Route::get('/exercises/predefined-schemas/{userid}', ['as' => 'exercisesPrdefefinedSchemaViewRqst', 'uses' => 'ExercisesController@exerciseView']);
-    Route::get('/exercises/createschedule/{userid}/{exerciseid}/{scheduleid}', ['as'=>'createscheduleRqst','uses'=>'ExercisesController@createschedule']);
-    Route::post('/exercises/add-exercise-group/{userid}',['as' => 'addExerciseGroupRqst', 'uses' => 'ExercisesController@addExerciseGroup']);
-    Route::post('/exercises/edit-exercise-group/{gid}',['as' => 'updateExerciseGroupRqst', 'uses' => 'ExercisesController@updateExerciseGroup']);
-    Route::post('/exercises/add-exercise/{user_id}', ['as' => 'addExerciseRqst', 'uses' => 'ExercisesController@addExercise']);
-    Route::post('/exercises/edit-exercise/{id}', ['as' => 'editExerciseRqst', 'uses' => 'ExercisesController@editExercise']);
-    Route::delete('/exercises/delete-exercise/{id}',['as' => 'deleteExerciseRqst', 'uses' =>  'ExercisesController@deleteExercise']);
-    Route::post('/exercises/edit-schedule/{id}', ['as' => 'editScheduleRqst', 'uses' => 'ExercisesController@editTrainingSchema']);
-    Route::delete('/exercises/delete-exercise-schedule/{id}', ['as' => 'deleteexerciseScheduleRqst', 'uses' => 'ExercisesController@deleteTrainingExercise']);
-    Route::get('/exercises/schema/pdf/{id}', ['as' => 'showPdfRoute', 'uses' => 'ExercisesController@showTrainingSchemaPdf']);
+           /**** Exercises Routes here*****/
+        Route::get('/exercises', ['as' => 'exercisesViewRqst', 'uses' => 'ExercisesController@exerciseView']);
+        Route::get('/exercises/createschedule/{userid}/{exerciseid}', ['as'=>'createscheduleRqst','uses'=>'ExercisesController@createschedule']);
+        Route::post('/exercises/add-exercise-group', ['as' => 'addExerciseGroupRqst', 'uses' => 'ExercisesController@addExerciseGroup']);
+        Route::post('/exercises/add-exercise', ['as' => 'addExerciseRqst', 'uses' => 'ExercisesController@addExercise']);
+        Route::post('/exercises/edit-exercise/{id}', ['as' => 'editExerciseRqst', 'uses' => 'ExercisesController@editExercise']);
+        Route::delete('/exercises/delete-exercise/{id}', ['as' => 'deleteExerciseRqst', 'uses' =>  'ExercisesController@deleteExercise']);
+        Route::post('/exercises/edit-schedule/{id}', ['as' => 'editScheduleRqst', 'uses' => 'ExercisesController@editTrainingSchema']);
+        Route::delete('/exercises/delete-exercise-schedule/{id}', ['as' => 'deleteexerciseScheduleRqst', 'uses' => 'ExercisesController@deleteTrainingExercise']);
+        Route::get('/exercises/schema/pdf/{id}', ['as' => 'showPdfRoute', 'uses' => 'ExercisesController@showTrainingSchemaPdf']);
 
 //    /*AJAX */
-    Route::get('/exercises/search-user/{company_id}/{keyword}',['as' => 'searchUserRqst','uses' => 'ExercisesController@searchUser']);
-    Route::get('/exercises/show-schedules/{userid}/{company_id}/{schedule_id?}', ['as' => 'showScheduleRqst', 'uses' => 'ExercisesController@showAddedExercises']);
-    Route::get('/exercises/schema/loadAddedSchema/{users}/{companyid}',['as' => 'loadAddedSchemaRqst','uses' => 'ExercisesController@loadAddedSchema']);
-    Route::get('/exercises/load-drop-area/{companyid}/{scheduleid}',['as' => 'loadDropableRqst','uses' => 'ExercisesController@loadDropableArea']);
+        Route::get('/exercises/search-user/{keyword}', ['as' => 'searchUserRqst','uses' => 'ExercisesController@searchUser']);
+        Route::get('/exercises/show-schedules/{userid}', ['as' => 'showScheduleRqst', 'uses' => 'ExercisesController@showAddedExercises']);
+        Route::get('/exercises/schema/loadAddedSchema/{users}', ['as' => 'loadAddedSchemaRqst','uses' => 'ExercisesController@loadAddedSchema']);
 
-    Route::get('/exercises/load-user-session/{user_id}',['as' => 'loadUserSessionRqst','uses' => 'ExercisesController@loadUserSession']);
-    Route::delete('/exercises/delete/schema/{id}',['as' => 'deleteSchemaRqst','uses' => 'ExercisesController@deleteSchedule']);
-    Route::post('/exercises/save-schema/{id}',['as' => 'saveSchemaRqst','uses' => 'ExercisesController@saveSchedule']);
-    Route::get('/exercises/addUserToSchema/{id}/{schemaid}',['as' => 'addUserToSchemaRqst','uses' => 'ExercisesController@addUserToSchema']);
-    Route::delete('/exercises/deleteUserToSchema/{id}/{schemaid}',['as' => 'deleteUserToSchemaRqst','uses' => 'ExercisesController@removeUserFromSchema']);
-    Route::get('/exercises/removeSessionUsers/{id}',['as' => 'removeSessionRqst','uses' => 'ExercisesController@removeSessionUsers']);
-    Route::get('/exercises/loadPredefinedSchema/{user_id}',['as' => 'loadPredefinedRqst','uses' => 'ExercisesController@loadPredefinedSchema']);
-    Route::get('/exercises/loadPredefinedSchemaFilter/{keyword}',['as' => 'loadPredefinedFilterRqst','uses' => 'ExercisesController@loadPredefinedSchemaFilter']);
-        Route::delete('/exercises/schema/deleteAddedSchema/{users}',['as' => 'deleteAddedRqst','uses' => 'ExercisesController@deleteAddedSchema']);
-    Route::get('/exercises/loadPredefinedSchema/exercise/{scheduleid}',['as' => 'loadPredefinedExerRqst','uses' => 'ExercisesController@loadPredefinedSchemaExercises']);
-    Route::get('/exercises/addpredefinedchedule/{userid}/{scheduleid}', 'ExercisesController@addpredefinedchedule');
+        Route::get('/exercises/load-user-session', ['as' => 'loadUserSessionRqst','uses' => 'ExercisesController@loadUserSession']);
+        Route::delete('/exercises/delete/schema/{id}', ['as' => 'deleteSchemaRqst','uses' => 'ExercisesController@deleteSchedule']);
+        Route::post('/exercises/save-schema/{id}', ['as' => 'saveSchemaRqst','uses' => 'ExercisesController@saveSchedule']);
+        Route::get('/exercises/updateSessionUsers/{id}', ['as' => 'updateSessionRqst','uses' => 'ExercisesController@updateSession']);
+        Route::get('/exercises/removeSessionUsers/{id}', ['as' => 'removeSessionRqst','uses' => 'ExercisesController@removeSessionUsers']);
+        Route::get('/exercises/loadPredefinedSchema', ['as' => 'loadPredefinedRqst','uses' => 'ExercisesController@loadPredefinedSchema']);
+        Route::get('/exercises/loadPredefinedSchemaFilter/{keyword}', ['as' => 'loadPredefinedFilterRqst','uses' => 'ExercisesController@loadPredefinedSchemaFilter']);
+        Route::delete('/exercises/schema/deleteAddedSchema/{users}', ['as' => 'deleteAddedRqst','uses' => 'ExercisesController@deleteAddedSchema']);
+        Route::get('/exercises/loadPredefinedSchema/exercise/{scheduleid}', ['as' => 'loadPredefinedExerRqst','uses' => 'ExercisesController@loadPredefinedSchemaExercises']);
+        Route::get('/exercises/addpredefinedchedule/{userid}/{scheduleid}', 'ExercisesController@addpredefinedchedule');
 
-    Route::delete('/exercises/delete-predefined-schema/{id}',['as' => 'deletePredefinedSchemaRqst','uses' => 'ExercisesController@deletePredefinedSchema']);
-
-    Route::post('/exercises/search/filter/{userid}',['as' => 'searchFilterRqst','uses' => 'ExercisesController@searchFiltterExercises']);
-
-    /*****Exercise Routes Ends Here ****/
+        /*****Exercise Routes Ends Here ****/
 
 
+        /**
+        Routes for Trainig dropdowns
+         **/
 
-    /**** food Products starts ****/
-
-
-//    Route::get('/food-products/{userid}', ['as' => 'foodproductsViewRqst', 'uses' => 'FoodProductsController@index']);
-    Route::get('/food-products/get-food-product/{companyid}/{pid}', ['as' => 'getProductsViewRqst', 'uses' => 'FoodProductsController@getProduct']);
-
-    Route::post('/food-products/add-product-group/{userid}',['as' => 'addFoodProductGroupRqst', 'uses' => 'FoodProductsController@addGroup']);
-    Route::post('/food-products/add-drop-group/{userid}',['as' => 'addDropGroupRqst', 'uses' => 'FoodProductsController@addDropGroup']);
-    Route::delete('/food-products/delete-exercise-group/{userid}',['as' => 'deleteGroupRqst', 'uses' => 'FoodProductsController@deleteGroup']);
-    Route::post('/food-products/edit-exercise-group/{userid}',['as' => 'editGroupRqst', 'uses' => 'FoodProductsController@editGroup']);
-    Route::post('/food-products/add-food-product/{userid}',['as' => 'addFoodProductRqst', 'uses' => 'FoodProductsController@addFoodProduct']);
-    Route::post('/food-products/edit-food-product/{pid}/{companyid}',['as' => 'editFoodProductRqst', 'uses' => 'FoodProductsController@editFoodProduct']);
-
-    Route::get('/food-products/{userid}/{groupid?}', ['as' => 'showProductsViewRqst', 'uses' => 'FoodProductsController@showProducts']);
-    Route::delete('/food-products/delete-food-product/{pid}', ['as' => 'deleteProductsViewRqst', 'uses' => 'FoodProductsController@deleteProduct']);
+        Route::post('/exercises/savetrainingGoal/{userid}', ['as' => 'savetrainingGoalRequest', 'uses' => 'TrainingController@savetrainingGoal']);
+        Route::post('/exercises/savetrainingMaterial/{userid}', ['as' => 'savetrainingMaterialRequest', 'uses' => 'TrainingController@savetrainingMaterial']);
+        Route::post('/exercises/savetrainingTrainingLevel/{userid}', ['as' => 'savetrainingTrainingLevelRequest', 'uses' => 'TrainingController@savetrainingTrainingLevel']);
+        Route::post('/exercises/savetrainingaccentgroup/{userid}', ['as' => 'savetrainingaccentgroupRequest', 'uses' => 'TrainingController@savetrainingaccentgroup']);
 
 
+        Route::delete('/exercises/deletetrainingGoal/{id}', ['as' => 'deletetrainingGoalRequest', 'uses' => 'TrainingController@deletetrainingGoal']);
+        Route::delete('/exercises/deletetrainingMaterial/{id}', ['as' => 'deletetrainingMaterialRequest', 'uses' => 'TrainingController@deletetrainingMaterial']);
+        Route::delete('/exercises/deletetrainingTrainingLevel/{id}', ['as' => 'deletetrainingTrainingLevelRequest', 'uses' => 'TrainingController@deletetrainingTrainingLevel']);
+        Route::delete('/exercises/deletetrainingaccentgroup/{id}', ['as' => 'deletetrainingaccentgroupRequest', 'uses' => 'TrainingController@deletetrainingaccentgroup']);
 
-    Route::get('/food-products/load-drop-area/{companyid}/{scheduleid}',['as' => 'loadDropableRqst','uses' => 'FoodProductsController@loadDropableArea']);
-    Route::get('/food-products/search-user/{company_id}/{keyword}',['as' => 'searchUserRqst','uses' => 'FoodProductsController@searchUser']);
-    Route::get('/food-products/addUserToSchema/{id}/{schemaid}',['as' => 'addUserToSchemaRqst','uses' => 'FoodProductsController@addUserToSchema']);
-    Route::delete('/food-products/deleteUserToSchema/{id}/{schemaid}',['as' => 'deleteUserToSchemaRqst','uses' => 'FoodProductsController@removeUserFromSchema']);
-    Route::get('/food-products/show-schedules/{userid}/{company_id}/{schedule_id?}', ['as' => 'showScheduleRqst', 'uses' => 'FoodProductsController@showAddedExercises']);
-//    Route::get('/food-products/createschedule/{userid}/{exerciseid}/{scheduleid}', ['as'=>'createscheduleRqst','uses'=>'FoodProductsController@createschedule']);
-    Route::post('/food-products/assign-meal/{pid}', ['as'=>'assignmealRqst','uses'=>'FoodProductsController@assignMeal']);
-
-    Route::get('/food-products/nutrition/training/{companyid}/{date}', ['as' => 'nutritiontrackingRqst', 'uses' => 'FoodProductsController@nutritionTracking']);
-
-  Route::post('/food-products/copy-meal', ['as'=>'copyMealRqst','uses'=>'FoodProductsController@copymeal']);
-        Route::delete('/food-products/delete-meal', ['as'=>'deleteMealRqst','uses'=>'FoodProductsController@deletemeal']);
-
-    /*****food Products ends *****/
-
-
-
-    /**
-    Routes for Trainig dropdowns
-     **/
-
-    Route::post('/exercises/savetrainingGoal/{userid}', ['as' => 'savetrainingGoalRequest', 'uses' => 'TrainingController@savetrainingGoal']);
-    Route::post('/exercises/savetrainingMaterial/{userid}', ['as' => 'savetrainingMaterialRequest', 'uses' => 'TrainingController@savetrainingMaterial']);
-    Route::post('/exercises/savetrainingTrainingLevel/{userid}', ['as' => 'savetrainingTrainingLevelRequest', 'uses' => 'TrainingController@savetrainingTrainingLevel']);
-    Route::post('/exercises/savetrainingaccentgroup/{userid}', ['as' => 'savetrainingaccentgroupRequest', 'uses' => 'TrainingController@savetrainingaccentgroup']);
-
-
-    Route::delete('/exercises/deletetrainingGoal/{id}', ['as' => 'deletetrainingGoalRequest', 'uses' => 'TrainingController@deletetrainingGoal']);
-    Route::delete('/exercises/deletetrainingMaterial/{id}', ['as' => 'deletetrainingMaterialRequest', 'uses' => 'TrainingController@deletetrainingMaterial']);
-    Route::delete('/exercises/deletetrainingTrainingLevel/{id}', ['as' => 'deletetrainingTrainingLevelRequest', 'uses' => 'TrainingController@deletetrainingTrainingLevel']);
-    Route::delete('/exercises/deletetrainingaccentgroup/{id}', ['as' => 'deletetrainingaccentgroupRequest', 'uses' => 'TrainingController@deletetrainingaccentgroup']);
-
-    Route::post('/exercises/updatetrainingGoal/{id}/{userid}', ['as' => 'updatetrainingGoalRequest', 'uses' => 'TrainingController@updatetrainingGoal']);
-    Route::post('/exercises/updatetrainingMaterial/{id}/{userid}', ['as' => 'updatetrainingMaterialRequest', 'uses' => 'TrainingController@updatetrainingMaterial']);
-    Route::post('/exercises/updatetrainingTrainingLevel/{id}/{userid}', ['as' => 'updatetrainingTrainingLevelRequest', 'uses' => 'TrainingController@updatetrainingTrainingLevel']);
-    Route::post('/exercises/updatetrainingaccentgroup/{id}/{userid}', ['as' => 'updatetrainingaccentgroupRequest', 'uses' => 'TrainingController@updatetrainingaccentgroup']);
-    Route::post('/exercises/profile/update/coaching/{id}', ['as' => 'profileupdatecoachingRqst', 'uses' => 'TrainingController@profileupdatecoaching']);
+        Route::post('/exercises/updatetrainingGoal/{id}/{userid}', ['as' => 'updatetrainingGoalRequest', 'uses' => 'TrainingController@updatetrainingGoal']);
+        Route::post('/exercises/updatetrainingMaterial/{id}/{userid}', ['as' => 'updatetrainingMaterialRequest', 'uses' => 'TrainingController@updatetrainingMaterial']);
+        Route::post('/exercises/updatetrainingTrainingLevel/{id}/{userid}', ['as' => 'updatetrainingTrainingLevelRequest', 'uses' => 'TrainingController@updatetrainingTrainingLevel']);
+        Route::post('/exercises/updatetrainingaccentgroup/{id}/{userid}', ['as' => 'updatetrainingaccentgroupRequest', 'uses' => 'TrainingController@updatetrainingaccentgroup']);
+        Route::post('/exercises/profile/update/coaching/{id}', ['as' => 'profileupdatecoachingRqst', 'uses' => 'TrainingController@profileupdatecoaching']);
 
 
 
 
-    /****Products starts here****/
-    Route::post('products/editgroup/{id}',['as' => 'editGroupRqst','uses'=> 'ProductsController@editprdouctgroup']);
-    Route::post('products/editprdouctgroup/{iid}', 'ProductsController@editprdouctgroup');
-    Route::post('products/editproducts/{productid}',['as' => 'editProductRqst','uses'=>  'ProductsController@editproducts']);
-
-    Route::get('/products/{companyid}', ['as' => 'productsRqst', 'uses' => 'ProductsController@productogroups']);
-    Route::get('/products/{companyid}/product-group/{pgroupslug}',['as' => 'showSubGroupRqst','uses'=>'ProductsController@groups']);
-
-    Route::get('/products/view-orders/{companyid}', ['as' => 'viewOrdersRequest', 'uses' => 'ProductsController@viewOrders']);
-
-     Route::get('/products/{companyid}/product-sub-group/{psubgroupslug}',  ['as' => 'showSubSubGroupsRqst', 'uses' =>  'ProductsController@subgroupproducts']);
-
-     Route::post('/products/add-product-group/{companyid}', ['as' => 'addProductGroupRqst', 'uses' => 'ProductsController@addProductGroup']);
-
-     Route::get('/products/view-orders/{companyid}/{start?}/{end?}/{keyword?}', ['as' => 'searchOrderRqst', 'uses' => 'ProductsController@searchOrders']);
 
 
+        /****Products starts here****/
+        Route::post('products/editgroup/{id}', ['as' => 'editGroupRqst','uses'=> 'ProductsController@editprdouctgroup']);
+        Route::post('products/editprdouctgroup/{iid}', 'ProductsController@editprdouctgroup');
+        Route::post('products/editproducts/{productid}', ['as' => 'editProductRqst','uses'=>  'ProductsController@editproducts']);
 
-     Route::post('/products/add-products/{companyid}', ['as' => 'addProductRqst', 'uses' => 'ProductsController@addProduct']);
-     Route::delete('/products/deleteproducts/{id}', ['as' => 'deleteProductRqst', 'uses' =>'ProductsController@deleteproduct']);
-     Route::delete('/products/deleteproductssubgroup/{id}',['as' => 'deleteProductSubGrpRqst', 'uses' => 'ProductsController@deleteproductssubgroup']);
+        Route::get('/products', ['as' => 'productsRqst', 'uses' => 'ProductsController@productogroups']);
+        Route::get('/products/product-group/{pgroupslug}', ['as' => 'showSubGroupRqst','uses'=>'ProductsController@groups']);
+         Route::get('/products/product-sub-group/{psubgroupslug}', ['as' => 'showSubSubGroupsRqst', 'uses' =>  'ProductsController@subgroupproducts']);
+
+         Route::post('/products/add-product-group', ['as' => 'addProductGroupRqst', 'uses' => 'ProductsController@addProductGroup']);
+         Route::get('/products/view-orders', ['as' => 'viewOrdersRequest', 'uses' => 'ProductsController@viewOrders']);
+         Route::post('/products/search-orders', ['as' => 'searchOrderRqst', 'uses' => 'ProductsController@viewOrders']);
 
 
 
+         Route::post('/products/add-products', ['as' => 'addProductRqst', 'uses' => 'ProductsController@addProduct']);
+         Route::delete('/products/deleteproducts/{id}', ['as' => 'deleteProductRqst', 'uses' =>'ProductsController@deleteproduct']);
+         Route::delete('/products/deleteproductssubgroup/{id}', ['as' => 'deleteProductSubGrpRqst', 'uses' => 'ProductsController@deleteproductssubgroup']);
 
-     Route::get('/products/getcart/{orderid}',[
+
+
+
+         Route::get('/products/getcart/{orderid}', [
          'uses' => 'ProductsController@getorderdetails'
-     ]);
+         ]);
 
-     Route::get('/products/cart/calculatetotalprice/{userid}','ProductsController@calculatetotalprice');
-     Route::get('/products/cart/showpaypopup/{userid}','ProductsController@showPayPopup');
+         Route::get('/products/cart/calculatetotalprice/{userid}', 'ProductsController@calculatetotalprice');
+         Route::get('/products/cart/showpaypopup/{userid}', 'ProductsController@showPayPopup');
 
-     Route::post('/products/cart/savecart',['as' => 'saveCartRqst', 'uses' => 'ProductsController@savecart']);
+         Route::post('/products/cart/savecart', ['as' => 'saveCartRqst', 'uses' => 'ProductsController@savecart']);
+
+//     Route::post('/products/add-products', ['as' => 'addProductRqst', 'uses' => 'ProductsController@addProduct']);
 
 
-     Route::get('/products/loadusertile/{companyid}',[
+         //Route::get('/loadusertile/{userid}','ProductsController@showpreviouslystoredorders');
+         Route::get('/products/loadusertile', [
          'uses' => 'ProductsController@loaduserlastaccessed'
-     ]);
+         ]);
 
-    Route::post('/products/saveProductSetting/{delflag}',[
+        Route::post('/products/saveProductSetting/{delflag}', [
         'as' => 'saveProductSettingRqst', 'uses' => 'ProductsController@saveProductSetting'
-    ]);
+        ]);
 
 
 
 //     //AJAX CALLS
-     Route::get('/products/showpreviouslystoredorders/{userid}',[
+         Route::get('/products/showpreviouslystoredorders/{userid}', [
          'uses' => 'ProductsController@showpreviouslystoredorders'
-     ]);
-     Route::post('/products/cart/savetransaction',[
+         ]);
+         Route::post('/products/cart/savetransaction', [
          'as' => 'saveTransactionRqst','uses' => 'ProductsController@savetransaction'
-     ]);
-     Route::post('/products/cart/cancelorder',['as' => 'cancelOrderRqst',
+         ]);
+         Route::post('/products/cart/cancelorder', ['as' => 'cancelOrderRqst',
          'uses' => 'ProductsController@cancelorder'
-     ]);
+         ]);
 
 
 //     Route::get('/products/loadfromsessioncart',[
@@ -224,23 +178,23 @@ Route::group(['middleware' => 'role'], function () {
 //         'uses' => 'ProductsController@removeSessionUsers'
 //     ]);
 
-     Route::post('/products/cart/editCartItem/{id}',[
+         Route::post('/products/cart/editCartItem/{id}', [
          'as' => 'editCartItemRqst','uses' => 'ProductsController@editCartItem'
-     ]);
-     Route::delete('/products/cart/deleteCartItem/{id}',[
+         ]);
+         Route::delete('/products/cart/deleteCartItem/{id}', [
          'as' => 'deleteCartItemRqst','uses' => 'ProductsController@deleteCartItem'
-     ]);
+         ]);
 
 
-     Route::get('/products/searchuser/{keyword}',[
+         Route::get('/products/searchuser/{keyword}', [
          'as' => 'products.searchuser',
          'uses' => 'ProductsController@searchusersonproducts'
-     ]);
+         ]);
 
-     Route::get('/products/createorder/{userid}/{productid}',[
+         Route::get('/products/createorder/{userid}/{productid}', [
          'as' => 'products.createorder',
          'uses' => 'ProductsController@createorder'
-     ]);
+         ]);
 //     /****Products Ends****/
 
 
@@ -249,11 +203,11 @@ Route::group(['middleware' => 'role'], function () {
 //     /*Products routes ends here*/
 
 
-    /*
+        /*
      * Notifications Routes here
-     * **/
+         * **/
 
-    Route::get('/notifications/view-notifications/{id}',['as' => 'viewnotificationsRqst', 'uses' => 'NotificationsController@viewNotifications']);
+        Route::get('/notifications/view-notifications/{id}', ['as' => 'viewnotificationsRqst', 'uses' => 'NotificationsController@viewNotifications']);
 
 
 
@@ -294,7 +248,6 @@ Route::group(['middleware' => 'role'], function () {
 
         Route::get('/bulk-delete/user-status', 'UserStatusController@bulkDestroyRequest');
 
-        Route::get('/bulk-publish/permissions', 'HomeController@publishPermission');
 
         Route::post('/check-in', 'UserController@checkIn');
         Route::get('/check-in-remove', 'UserController@checkInRemove');
@@ -333,9 +286,6 @@ Route::group(['middleware' => 'role'], function () {
 
         
         Route::post('users/destroy-bulk', ['as'=>'deleteBulkRequest','uses'=>'UserController@bulkDestroyURequest']);
-        
-        Route::post('block/{id}', ['as'=>'blockUser','uses'=>'UserController@block']);
-        Route::post('status/change/{id}', ['as'=>'statusChange','uses'=>'UserController@changeStatus']);
 
 //     /*** For Roles ***/
          Route::resource('roles', 'RolesController');

@@ -13,8 +13,7 @@
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^3.0",
         "spatie/laravel-activitylog": "^2.5",
-        "tplaner/when": "^2.1",
- "jorgejavierleon/laravelpnotify": "~1.0"
+        "tplaner/when": "^2.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

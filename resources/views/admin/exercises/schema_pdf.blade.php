@@ -44,7 +44,6 @@
             position: relative;
             width: 100%;
             height: 100%;
-            background: #ffffff;
         }
     </style>
 @endsection
@@ -79,9 +78,6 @@
 
 
 
-                <?php
-                $break=0;
-                ?>
                 @foreach($schemas as $key=>$schema)
 
 
@@ -103,7 +99,7 @@
                                                 <h5>
                                                 Name:
                                                     @foreach($users as $user)
-                                                        <span class="badge badge-primary" style="padding: 5px;">{{ $user->name }}</span>
+                                                        <span class="badge badge-primary">{{ $user->name }}</span>
 
                                                     @endforeach
                                                     <br></h5>
@@ -115,8 +111,8 @@
                                                 {{--<h5>Equipment: press</h5>--}}
 
                                             </td>
-                                            <td style="text-align: right">
-                                                <h4>Starts on  <br>{{  Carbon\Carbon::parse($schema['startdate'])->format('d/m/Y')  }}</h4>
+                                            <td>
+                                                <h5>Starts on:  {{ $schema['startdate']  }}</h5>
                                                 {{--<h5>Coach: press</h5>--}}
                                             </td>
                                         </tr>
@@ -132,9 +128,7 @@
 
 
 
-                            <?php
-                            $break++;
-                            ?>
+
 
 
                     <div class="grid row show-grid grid{{$schema['company_name']}}"  >
@@ -142,9 +136,7 @@
 
 
 
-
-
-                        <div class="cu-top-margin tile-bg item  @if($break%2==0)  pagebreak  @endif" style="page-break-after:always !important;">
+                        <div class="cu-top-margin tile-bg item" style="page-break-after:always !important;">
                             <div class="item-content">
                                 <div class="box-header with-border" style="background-color: #f39c12 !important;padding: 1px 6px 1px 10px;
     color: white;">
@@ -182,8 +174,8 @@
 
                                                     <?php
 
-                                                    $length=count(json_decode($schema['ex_meta'],true));
-                                                    $metaArr=json_decode($schema['ex_meta'],true);
+                                                    $length=count(json_decode($schema['ex_meta'], true));
+                                                    $metaArr=json_decode($schema['ex_meta'], true);
 
 
                                                     ?>
@@ -230,9 +222,6 @@
                             <!-- /.box -->
                         </div>
 
-                        <?php
-                        $break++;
-                        ?>
 
                         @if($key==0)
                     </div>

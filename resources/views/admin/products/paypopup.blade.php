@@ -28,7 +28,7 @@
                                 <h4 class="glyphicon glyphicon-road"></h4><br/>Account
                             </a>
                             <a href="#" class="list-group-item text-center" onclick="cancelorder(this)">
-                                <h4 class="glyphicon glyphicon-trash"></h4><br/>Delete
+                                <h4 class="glyphicon glyphicon-trash"></h4><br/>@lang('common.delete')
                             </a>
 
                         </div>
@@ -46,49 +46,13 @@
                                     <input type="hidden" name="amountaccount" value="{{ $orderamount->invoiceamount }}">
                                     <input type="hidden" name="transaction_type" value="by_cash">
                                     <tr>
-                                        <td   colspan="4">
-
-                                            <span>Total Amount : <i class="fa fa-euro"></i> <span id="totttal_pay">{{ $orderamount->invoiceamount }}</span></span>
-
-
-
-                                            <input style="text-align: right"  id="amountvalue" class="form-control" type="text" name="answer" value=""  required/>
-                                            <div  id="showerror" style="color: red;display: none">Please enter amount</div>
-
-                                        </td>
+                                        <td   colspan="4"><input  id="amountvalue" class="form-control" type="text" name="answer" value="{{ $orderamount->invoiceamount }}"  required/></td>
                                     </tr>
                                     <tr>
                                         <td><input class="calbutton  form-control" type="button" value=" 1 " onclick="calculator.answer.value += '1'" /></td>
                                         <td><input class="calbutton form-control" type="button" value=" 2 " onclick="calculator.answer.value += '2'" /></td>
                                         <td><input class="calbutton form-control" type="button" value=" 3 " onclick="calculator.answer.value += '3'" /></td>
-                                        <td rowspan="4"><input id="okbutton" type="button"  onclick="setvalue()" class="btn btn-primary" value=" OK "  />
-
-                                            <div class="final_paybtn" style="    margin: 0 auto;
-    padding: 16px;
-    border: 1px solid;width:60%;display: none;background: #fff; height: 100%;position: absolute;    top: 0;left: 0;right: 0;">
-
-                                                    <h4>Wisselgeld</h4>
-                                                    <br>
-
-                                                <h2><i class="fa fa-euro"></i> <span id="fnval"></span></h2>
-
-                                                    <button style="width: 100%" type="button" class="btn btn-default" onclick="$('.final_paybtn').hide()">
-                                                        <i class="fa fa-times"></i> Annulerain
-                                                    </button>
-                                                    <input type="hidden" name="orderid" value="{{ $orderamount->id }}">
-                                                    <input type="hidden" name="amountaccount" value="{{ $orderamount->invoiceamount }}">
-                                                    <input type="hidden" name="transaction_type" value="by_account">
-                                                    <button style="width: 100%" type="submit" class="btn btn-primary" >
-                                                        <i class="fa fa-check"></i> Vooltai Transactie
-                                                    </button>
-
-
-                                            </div>
-
-                                        </td>
-
-
-
+                                        <td rowspan="4"><input id="okbutton" type="submit" class="btn btn-primary" value=" OK "  /></td>
 
                                     </tr>
                                     <tr>

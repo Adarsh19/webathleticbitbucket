@@ -426,7 +426,7 @@ padding: 0px !important;
 												<div class="widget-summary-col">
 													<div class="summary">
 														<h4 class="title">Eerste dag</h4>
-														<div class="col-sm-12 num-txt erste_dag"></div>
+														<div class="col-sm-12 num-txt">{{$data['totalUsers']}}</div>
 													</div>
 												</div>
 											</div>
@@ -447,7 +447,7 @@ padding: 0px !important;
 												<div class="widget-summary-col">
 													<div class="summary">
 														<h4 class="title">Laatste Dag</h4>
-														<div class="col-sm-12 num-txt laatste_dag"></div>
+														<div class="col-sm-12 num-txt">{{$data['currentUsers']}}</div>
 													</div>
 												</div>
 											</div>
@@ -468,7 +468,7 @@ padding: 0px !important;
 												<div class="widget-summary-col">
 													<div class="summary">
 														<h4 class="title">Verchil</h4>
-														<div class="col-sm-12 num-txt verchil"></div>
+														<div class="col-sm-12 num-txt">{{$data['diffUsers']}}</div>
 													</div>
 												</div>
 											</div>
@@ -488,7 +488,7 @@ padding: 0px !important;
 												<div class="widget-summary-col">
 													<div class="summary">
 														<h4 class="title">Percentage</h4>
-														<div class="col-sm-12 num-txt avg_days"></div>
+														<div class="col-sm-12 num-txt">{{$data['diffPercentage']}}%</div>
 												</div>
 											</div>
 										</div>
@@ -507,8 +507,8 @@ padding: 0px !important;
 												</div>
 												<div class="widget-summary-col">
 													<div class="summary">
-														<h4 class="title">Ingeschreven</h4>
-														<div class="col-sm-12 num-txt ingeschreven"></div>
+														<h4 class="title">Nieuw</h4>
+														<div class="col-sm-12 num-txt">{{$data['lastMonthNew']}}</div>
 												</div>
 											</div>
 										</div>
@@ -527,8 +527,8 @@ padding: 0px !important;
 												</div>
 												<div class="widget-summary-col">
 													<div class="summary">
-														<h4 class="title">Uitgeschreven</h4>
-														<div class="col-sm-12 num-txt uitgeschreven"></div>
+														<h4 class="title">Opgezegd</h4>
+														<div class="col-sm-12 num-txt">{{$data['lastMonthBlocked']}}%</div>
 												</div>
 											</div>
 										</div>
@@ -603,25 +603,6 @@ function lineGraph(graphid,data, options,colors=[]) {
 		  	}
 });
 }
-
-function calcGraph(graph_users)
-{
-	len=graph_users['series'][0].length-1;
-	$('.erste_dag').text(graph_users['series'][0][0]);
-	$('.laatste_dag').text(graph_users['series'][0][len]);
-	$('.verchil').text(parseInt($('.laatste_dag').text())-parseInt($('.erste_dag').text()));
-	uitgeschreven=graph_users['series'][3][len]-graph_users['series'][3][0];
-	// $.each(graph_users['series'][3], function(i, item) {
-	//     uitgeschreven=uitgeschreven+graph_users['series'][3][i];
-	// });​
-	$('.uitgeschreven').text(uitgeschreven);
-	ingeschreven=graph_users['series'][4][len]-graph_users['series'][4][0];
-	// $.each(graph_users['series'][4], function(i, item) {
-	//     ingeschreven=ingeschreven+graph_users['series'][4][i];
-	// });​
-	$('.ingeschreven').text(ingeschreven);
-	$('.avg_days').text(parseFloat(graph_users['av_date']).toFixed(0));
-}
 	$(document).ready(function(){
 		var options = {
 		 	axisY:{ 
@@ -635,9 +616,6 @@ function calcGraph(graph_users)
 		var graph_products={!! json_encode($graph_products) !!};
 		var graph_services={!! json_encode($graph_service) !!};
 		lineGraph('ChartistSimpleLineChart',graph_users,options);
-        calcGraph(graph_users);
-
-		
 // Tabs
 $('.charts-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
@@ -737,8 +715,7 @@ $('#fi').on('change',function(){
     	link=link.replace('edate',end.format('YYYY-MM-DD'));
     	$.get(link, function(data, status){
 	   		$.each( data, function( key, value ) {
-                lineGraph('ChartistSimpleLineChart',value[0],options);
-                calcGraph(value[0]); 
+                lineGraph('ChartistSimpleLineChart',value[0],options);     
             });
 
 	    });

@@ -1,129 +1,110 @@
-@media print {
-    .box-header {
-        width: 100%;
-        background-color: #f39c12 !important;
-        -webkit-print-color-adjust: exact;
-    }}
-
-@media print {
-    .badge {
-        background-color: #0088cc !important;
-        -webkit-print-color-adjust: exact;
-    }
-
-
-
-}
-
-@media print {
-    /* insert your style declarations here */
-    body {
-        background: #fff;
-        color: #000;
-        font-size: 8pt;
-        line-height: 150%;
-        margin: 0px;
-    }
-    hr {
-        color: #ccc;
-        background-color: #ccc;
-    }
-    h1, h2, h3, h4, h5, h6, code, pre {
-        color: #000;
-        text-transform: none; /* because sometimes I set all-caps */
-    }
-    h1 {
-        font-size: 11pt;
-        margin-top: 1em;
-    }
-    h2 {
-        font-size: 10pt;
-    }
-    h3 {
-        font-size: 9pt;
-    }
-    h4, h5, h6 {
-        font-size: 8pt;
-    }
-    code, pre {
-        font-size: 8pt;
-        background-color: transparent;
-        /* just in case the user configured browser to print backgrounds */
-    }
-    blockquote {
-        background-image: none;
-        /* though they may not print, I’d rather be sure */
-    }
-    a:link, a:visited {
-        text-decoration: underline;
-        color: #000;
-    }
-    abbr:after, acronym:after { /* some HTML4 love */
-        content: " (" attr(title) ") ";
-        /* I suspect I am one of the few who still use these elements */
-    }
-
-    .csstable td{
-        width: 25% !important;
-    }
-
-    .page-header{display:none;}
-    #sidebar-left{display:none}
-    #btnPrint{display: none}
-    .content-header{
-        display: none;}
-
-    .attachment-img{
-
-        width: 50px;
-        height: 80px;
-        object-fit: cover !important;}
-
-    /*.rightpart-wid{width: 200px;float:right;}*/
-    /*.leftpart-float{float:left;}*/
-    .tablewidth{width: 100%;
-        margin: 0 auto;}
-    .company-logo{width: 100px;}
-
-    .grid {
-        position: inherit;
-    }
-    .item {
-       margin-left: 0px;
-        display: block;
-        position: absolute;
-        width: 100%;
-        /*height: 100px;*/
-        margin: 5px;
-        z-index: 1;
-        /*background: #fff;*/
-        /*color: #fff;*/
-    }
-    .item.muuri-item-dragging {
-        z-index: 3;
-    }
-    .item.muuri-item-releasing {
-        z-index: 2;
-    }
-    .item.muuri-item-hidden {
-        z-index: 0;
-    }
-    .item-content {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-
-
-
-    @media print {
-        .page-break	{ page-break-before: always; }
-
-        .pagebreak { page-break-before: always; }
-    }
-
-
-
-
-
+@media print {
+    /* insert your style declarations here */
+    body {
+        background: #fff;
+        color: #000;
+        font-size: 8pt;
+        line-height: 150%;
+        margin: 0px;
+    }
+    hr {
+        color: #ccc;
+        background-color: #ccc;
+    }
+    h1, h2, h3, h4, h5, h6, code, pre {
+        color: #000;
+        text-transform: none; /* because sometimes I set all-caps */
+    }
+    h1 {
+        font-size: 11pt;
+        margin-top: 1em;
+    }
+    h2 {
+        font-size: 10pt;
+    }
+    h3 {
+        font-size: 9pt;
+    }
+    h4, h5, h6 {
+        font-size: 8pt;
+    }
+    code, pre {
+        font-size: 8pt;
+        background-color: transparent;
+        /* just in case the user configured browser to print backgrounds */
+    }
+    blockquote {
+        background-image: none;
+        /* though they may not print, I’d rather be sure */
+    }
+    a:link, a:visited {
+        text-decoration: underline;
+        color: #000;
+    }
+    abbr:after, acronym:after { /* some HTML4 love */
+        content: " (" attr(title) ") ";
+        /* I suspect I am one of the few who still use these elements */
+    }
+
+    .csstable td{
+        width: 25% !important;
+    }
+
+    .page-header{display:none;}
+    #sidebar-left{display:none}
+    #btnPrint{display: none}
+    .content-header{
+        display: none;}
+
+    .attachment-img{
+
+        width: 50px;
+        height: 80px;
+        object-fit: cover !important;}
+
+    /*.rightpart-wid{width: 200px;float:right;}*/
+    /*.leftpart-float{float:left;}*/
+    .tablewidth{width: 100%;
+        margin: 0 auto;}
+    .company-logo{width: 100px;}
+
+    .grid {
+        position: inherit;
+    }
+    .item {
+       margin-left: 0px;
+        display: block;
+        position: absolute;
+        width: 100%;
+        /*height: 100px;*/
+        margin: 5px;
+        z-index: 1;
+        /*background: #fff;*/
+        /*color: #fff;*/
+    }
+    .item.muuri-item-dragging {
+        z-index: 3;
+    }
+    .item.muuri-item-releasing {
+        z-index: 2;
+    }
+    .item.muuri-item-hidden {
+        z-index: 0;
+    }
+    .item-content {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+
+
+    @media print {
+        .page-break	{ page-break-before: always; }
+    }
+
+
+
+
+
 }

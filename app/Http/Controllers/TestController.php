@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Middleware\CheckAdminOrCompanyMiddleware;
-use Illuminate\Support\Facades\Gate;
 
 class TestController extends Controller
 {

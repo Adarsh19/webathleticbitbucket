@@ -34,7 +34,6 @@ class HomeController extends Controller
         if ($user == null) {
             $user = '';
         }
-        
         // $packages = DB::select('SELECT
         //     `packages`.*,
         //     `productmedia`.`name` as `pname`,
@@ -591,11 +590,5 @@ class HomeController extends Controller
 
         return view('pages.contact', compact( 'company_data', 'is_company', 'hasUI'));
    
-    }
-    
-    
-     public function publishPermission(Request $request){
-
-        public_permissions();
     }
 }

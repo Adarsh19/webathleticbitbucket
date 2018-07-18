@@ -100,13 +100,7 @@
                                                        <span class="input-group-addon">
                                                             <i class="fa fa-building"></i>
                                                         </span>
-                                                        
-                                                        <select name="Soort" class="form-control">
-                                                            
-                                                        @foreach($user_statuses as $user_status)
-                                                            <option value="{{$user_status->id}}" {{ ((old('Soort') == $user_status->id)?'selected=true':'') }}>{{$user_status->status}}</option>
-                                                        @endforeach
-                                                        </select>
+                                                        <input type="text" name="Soort" class="form-control" id="surname"  value="{{@old('Soort', '')}}">
                                                         <span class="text-danger role-error"></span>
                                                     </div>
                                                 </div>

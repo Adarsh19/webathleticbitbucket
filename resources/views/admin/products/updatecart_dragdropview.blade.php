@@ -19,10 +19,7 @@
             <label>
 
                 <div>
-                    <?php
-                    $tax_amount=$order->price * ($order->tax/100);
-                    ?>
-                <span class="text price"><i class="fa fa-eur"></i> {{$order->price - $tax_amount}} ({{ round($order->tax, 0) }} %)</span>
+                <span class="text price">${{$order->price}} (+{{ $order->tax }})</span>
                 <small class="label label-danger quantity"> {{$order->quantity}} </small>  &nbsp;&nbsp;<span>  {{$order->name}}</span>
                 </div>
                 <div class="tools pull-right tooltipicons">
@@ -64,7 +61,7 @@
 								<i class="fa fa-square-o fa-stack-2x"></i>
 								<i class="fa fa-trash fa-stack-1x"></i>
 							</span>
-                            Are you sure want to delete this ?
+                            @lang('common.delete_modal_text')
                         </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
@@ -76,7 +73,7 @@
                             <input type="hidden" name="userid" value="{{$order->userid}}">
                             <input type="hidden" name="orderid" value="{{$order->orderid}}">
                             {{method_field('DELETE')}}
-                            <button type="submit" class="btn btn-outline">Delete</button>
+                            <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                         </form>
                     </div>
                 </div>
@@ -150,8 +147,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button"  class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="button"  class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Submit</button>
                     </div>
                 </form>
 

@@ -150,9 +150,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
     // });
 </script>
 <!-- Theme Base, Components and Settings -->
-
- <script type="text/javascript" src="{{asset('/admin_files/vendor/bootstrap-timepicker/bootstrap-timepicker.js')}}"></script>
-
 <script src="{{ asset('admin_files/js/theme.js')}}"></script>
 
 <!-- Theme Custom -->
@@ -164,17 +161,6 @@ The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for t
 
 <!-- Examples -->
 <script src="{{ asset('admin_files/js/examples/examples.dashboard.js')}}"></script>
-
- <script type="text/javascript" src="{{asset('/admin_files/vendor/pnotify/pnotify.custom.js')}}"></script>
-
-    @include('admin.includes.pnotify')
-
-
-<?php
-			$default_first_calendar_obj=\App\ServiceSchedule::select('id')->where('user_id',$user->id)->first();
-            $serviceschedule_id=$default_first_calendar_obj->id;
-            $date=Carbon\Carbon::now()->format('d-m-Y');
-?>
 <script type="text/javascript">
     
     if(!{{ Auth::user()->accepted_terms }}){
@@ -195,32 +181,6 @@ $(".btn.accept-terms").click(function(){
         }
     });
 })
-
- $(document).ready(function () {
-
-            var user='{{\Illuminate\Support\Facades\Auth::id()}}';
-            var scheduleid='{{$serviceschedule_id}}';
-
-            var user={{\Illuminate\Support\Facades\Auth::id()}}
-        $('.headercalendar').datepicker({
-                format: 'dd-mm-yyyy',
-                autoclose: 'true',
-                todayBtn: 'true',
-                todayHighlight: 'true',
-                orientation: 'auto top',
-                language: 'nl'
-
-            }).on('changeDate', function(ds) {
-
-
-                var arr=ds.format().split("/");
-                var date=arr[1]+"-"+arr[0]+"-"+arr[2];
-
-                //$('#tab2').trigger("shown.bs.tab");
-                window.location.href = BASE_URL+"/admin/rooster/"+user+"/"+scheduleid+"/"+date;
-            });
-        })
-
 </script>
      @yield('script')
 

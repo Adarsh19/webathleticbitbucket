@@ -49,11 +49,13 @@
                         </li>
                         @endcan
                         @can ('check-route', 'admin.companys.index')
+                        @if($user->role == "admin")
                         <li>
                             <a href="{{ route('admin.companys.index') }}">
                             <i class="fa fa-building-o"></i>
                              <span>Bedrijven</span></a>
                         </li>
+                        @endif
                         @endcan
                         @can ('check-route', 'admin.services.index')
                         <li>
@@ -73,64 +75,38 @@
                         @endcan
                         @can ('check-route', 'admin.productsRqst')
                           @if($user->role == "admin" || $user->role == "company")
-                                    <li>
+                                <li>
 
 
-                                        <a href="@if(isset($user->products_default_setting)) /{{$user->products_default_setting}} @else {{ route('admin.productsRqst',$user->id) }} @endif">
-                                            <i class="fa fa-superpowers"></i>
-                                            <span>Kassa</span></a>
-                                    </li>
+                                    <a href="@if(isset($user->products_default_setting)) /{{$user->products_default_setting}} @else {{ route('admin.productsRqst') }} @endif">
+                                        <i class="fa fa-superpowers"></i>
+                                        <span>Kassa</span></a>
+                                </li>
                             @endif
                         @endcan
-
-                            @can ('check-route', 'admin.productsRqst')
-                                @if($user->role == "admin" || $user->role == "company")
-                                    <li>
-
-
-                                        <?php
-
-                                        $groupifadded_foods=\App\ProductGroups::select('id')
-                                            ->where('user_id',$user->id)
-                                            ->where('group_type','foodproducts')
-                                            ->first();
-
-
-
-                                        $gidd=0;
-                                        If(!empty($groupifadded_foods)){
-                                            $gidd=$groupifadded_foods->id;
-                                        }
-                                        ?>
-                                        <a href=" {{ route('admin.showProductsViewRqst',[$user->id,$gidd]) }}">
-                                            <i class="fa fa-user"></i>
-                                            <span>Food Products</span></a>
-                                    </li>
-                                @endif
-                            @endcan
                         @can ('check-route', 'admin.exercisesViewRqst')
                         
                             @if($user->role == "admin" || $user->role == "company")
-                                    <li>
-                                        <a href="{{ route('admin.exercisesViewRqst',$user->id) }}">
-                                            <i class="fa fa-grav"></i>
-                                            <span>Exercises</span></a>
-                                    </li>
+                                <li>
+                                    <a href="{{ route('admin.exercisesViewRqst') }}">
+                                        <i class="fa fa-grav"></i>
+                                        <span>Exercises</span></a>
+                                </li>
                             @endif
                         @endcan
-                            <li>
-                                <?php
+                                <li>
+                                    <?php
 
 
-                                $default_first_calendar_obj=\App\ServiceSchedule::select('id')->where('user_id',$user->id)->first();
-                                $serviceschedule_id=$default_first_calendar_obj->id;
-                                $date=Carbon\Carbon::now()->format('d-m-Y');
-                                ?>
+                                        $default_first_calendar_obj=\App\ServiceSchedule::select('id')->where('user_id', $user->id)->first();
+                                        $serviceschedule_id=isset($default_first_calendar_obj)?$default_first_calendar_obj->id:'0';
+                                        $date=Carbon\Carbon::now()->format('d-m-Y');
+                                    ?>
 
-                                <a href="/admin/rooster/{{$user->id}}/{{$serviceschedule_id}}/{{$date}}">
-                                    <i class="fa fa-calendar"></i>
-                                    <span>Rooster</span></a>
-                            </li>
+                                    <a href="/admin/rooster/{{$user->id}}/{{$serviceschedule_id}}/{{$date}}">
+                                        <i class="fa fa-calendar"></i>
+                                        <span>Rooster</span></a>
+                                </li>
 
                     @endif
 

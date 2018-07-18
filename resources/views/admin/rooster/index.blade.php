@@ -10,8 +10,6 @@
 {{--    <link rel="stylesheet" href="{{ asset('/admin_files/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css') }}">--}}
     <link rel="stylesheet" href="{{ asset('/admin_files/vendor/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/admin_files/vendor/bootstrap-multiselect/bootstrap-multiselect.css') }}">
-
-
     <style>
         .width100{width: 100%;}
         .external-event{color:#fff !important;}
@@ -97,11 +95,11 @@
                                         <div class="modal-header">
 
                                             <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                                Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                                @lang('common.delete_modal_text')
                                             </h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span></button>
@@ -111,7 +109,7 @@
                                             <form method="post" role="form" id="delete_form" action=" {{ route('admin.deleteScheduleRqst',$service_schedule->id ) }}">
                                                 {{csrf_field()}}
                                                 {{method_field('DELETE')}}
-                                                <button type="submit" class="btn btn-outline">Delete</button>
+                                                <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                             </form>
                                         </div>
                                     </div>
@@ -170,7 +168,7 @@
                                                                 <label>Choose Color</label>
                                                                 <div class="input-group color colorpicker-element  add-schedule-colorpicker" data-plugin-colorpicker="">
                                                                     <span class="input-group-addon"><i style="background-color: rgb(18, 63, 87);" ></i></span>
-                                                                    <input name="color" type="text" class="form-control colorinput" value="{{$service_schedule->color}}" placeholder="Kies kleur">
+                                                                    <input name="color" type="text" class="form-control colorinput" value="{{$service_schedule->color}}" placeholder="Choose custom Color">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -214,18 +212,18 @@
                         @endforeach
 
                             <li class="nav-item">
-                                <a class="nav-link" href="#"   data-toggle="modal" data-target="#addScheduleModal"><i class="fa fa-plus"></i> Toevoegen</a>
+                                <a class="nav-link" href="#"   data-toggle="modal" data-target="#addScheduleModal"><i class="fa fa-plus"></i> Add Schedule</a>
                             </li>
 
 
 
-                            @if(\Illuminate\Support\Facades\Auth::user()->role=="admin")
+                            @if($user->role=="admin")
                             <li class="dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-search"></i> Zoek bedrijf <span class="caret"></span></a>
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-search"></i> Seach By Company <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     @foreach($companies as $company)
                                     <li>
-                                        <a class="dropdown-item" href="{{route('admin.roosterRqst',$company->user_id)}}" >{{$company->company_name}}</a>
+                                        <a class="dropdown-item" href="{{route('admin.roosterRqst',$company->user_id)}}" >{{$company->name}}</a>
                                     </li>
                                     @endforeach
                                 </ul>
@@ -284,7 +282,7 @@
                                         <div class="row">
 
                                             <div class="col-lg-12">
-                                                <p class="h5 font-weight-light"><i class="fa fa-calendar"></i> Kalender</p>
+                                                <p class="h5 font-weight-light"><i class="fa fa-calendar"></i> Calendar</p>
 
                                                 <hr/>
 
@@ -315,7 +313,7 @@
                                                         <div class="row">
 
                                                             <div class="col-lg-12">
-                                                                <p class="h5 font-weight-light"><i class="fa fa-search"></i> Zoek en voeg lid toe</p>
+                                                                <p class="h5 font-weight-light"><i class="fa fa-search"></i> Search and Add User</p>
 
                                                                 <hr/>
 
@@ -328,7 +326,7 @@
                                                                     <div class="row" style="margin-bottom: 20px;">
                                                                         <div class="input-group">
                                                                             <input style="margin: 0px 10px 0px 10px;" id="new-event" type="text" name="user_name" class="form-control searchbaruser_right_sidebar"
-                                                                                   placeholder="Zoek lid">
+                                                                                   placeholder="Search User">
 
                                                                         </div>
                                                                     </div>
@@ -344,7 +342,7 @@
                                                                                 <input name="color" type="text" class="form-control colorinput" value=""
                                                                                        placeholder="Choose custom Color">
                                                                                 <div class="input-group-btn">
-                                                                                    <button id="add-new-event" type="button" class="btn btn-primary btn-flat">Toevoegen</button>
+                                                                                    <button id="add-new-event" type="button" class="btn btn-primary btn-flat">Add</button>
                                                                                 </div>
                                                                             </div>
 
@@ -436,7 +434,7 @@
 
                 <div class="modal-header">
 
-                    <h4 class="modal-title modtil">Toevoegen</h4>
+                    <h4 class="modal-title modtil">Add Schedule</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span></button>
                 </div>
@@ -509,7 +507,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-block btn-primary btn-sm pull-right" style="width: 100px">Toevoegen</button>
+                    <button type="submit" class="btn btn-block btn-primary btn-sm pull-right" style="width: 100px">Add Schedule</button>
                 </div>
 
             </form>
@@ -525,10 +523,10 @@
             <div class="modal-content">
                 <div class="modal-header hidden">
                     <h4 class="modal-title">
-		                    <span class="fa-stack fa-sm">
-		                        <i class="fa fa-square-o fa-stack-2x"></i>
-		                        <i class="fa fa-plus fa-stack-1x"></i>
-		                    </span>
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-plus fa-stack-1x"></i>
+                            </span>
                         Add User
                     </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -541,14 +539,14 @@
                         <div class="tabs tabs-dark">
                             <ul class="nav nav-tabs">
                                 <li class="nav-item tab-add">
-                                    <a class="nav-link tab-edit active" href="#schedule" data-toggle="tab">Maak event</a>
+                                    <a class="nav-link tab-edit active" href="#schedule" data-toggle="tab">Maak agenda</a>
                                 </li>
                                 <li class="nav-item tab-edit">
-                                    <a class="nav-link" href="#bookuser" data-toggle="tab">Aanmeldingen</a>
+                                    <a class="nav-link" href="#bookuser" data-toggle="tab">Aanmeldingens</a>
                                 </li>
-                                {{--<li class="nav-item tab-delete">--}}
-                                    {{--<a class="nav-link" id="delete-user-button" data-toggle="modal" data-target="#delete-modal-event">Verwijder </a>--}}
-                                {{--</li>--}}
+                                <li class="nav-item tab-delete">
+                                    <a class="nav-link" id="delete-user-button" data-toggle="modal" data-target="#delete-modal-event">Verwijder </a>
+                                </li>
                             </ul>
 
                             <div class="tab-content">
@@ -580,7 +578,7 @@
                                                 <label>Dienst</label>
                                                 <?php $services=\App\Service::get()?>
                                                 <select class="form-control" id="changeSe" onchange="changeService(this)" name="service" required>
-                                                    <option max_isers="" value="">Kies een dienst</option>
+                                                    <option max_isers="" value="">Select Service</option>
                                                     @foreach($services as $service)
                                                         <option max_users="{{$service->user_mass}}" value="{{$service->id}}">{{$service->service}}</option>
                                                     @endforeach
@@ -590,7 +588,20 @@
                                         </div>
 
 
+                                        {{--<div class="col-lg-6 form-group">--}}
+                                            {{--<!-- select -->--}}
+                                            {{--<div class="">--}}
+                                                {{--<label>Choose Schedule</label>--}}
+                                                {{--<?php $schedules=\App\ServiceSchedule::get()?>--}}
+                                                {{--<select multiple  class="form-control schedules-list">--}}
+                                                    {{--<option  value="">Select Service</option>--}}
+                                                    {{--@foreach($schedules as $schedule)--}}
+                                                        {{--<option  value="{{$schedule->id}}">{{$schedule->title}}</option>--}}
+                                                    {{--@endforeach--}}
+                                                {{--</select>--}}
+                                            {{--</div>--}}
 
+                                        {{--</div>--}}
 
                                     </div>
                                     <div class="row">
@@ -610,9 +621,9 @@
                                                 <label>Tijd vanaf </label>
 
                                                 <div class="input-group">
-														<span class="input-group-addon">
-															<i class="fa fa-clock-o"></i>
-														</span>
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </span>
                                                     <input name="time_from" id="time_from" type="text" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }' >
                                                 </div>
 
@@ -653,9 +664,9 @@
                                                 <label>Tijd tot</label>
 
                                                 <div class="input-group">
-														<span class="input-group-addon">
-															<i class="fa fa-clock-o"></i>
-														</span>
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-clock-o"></i>
+                                                        </span>
                                                     <input name="time_untill" id="time_untill" type="text" data-plugin-timepicker class="form-control" data-plugin-options='{ "showMeridian": false }' >
                                                 </div>
 
@@ -695,7 +706,7 @@
                                             <div class="">
                                                 <label>Herhaling</label>
                                                 <select class="form-control " onchange="chooseReccuringSchedule(this)" name="recurringtype" id="recurringtype">
-                                                    <option value="">Niet herhalen</option>
+                                                    <option value="">Do Not Repeat</option>
                                                     <option value="daily">Daily</option>
                                                     <option value="weekly">Weekly</option>
                                                     <option value="monthly">Monthly</option>
@@ -725,7 +736,10 @@
 
                                                 <div class="weeklydays" style="display: none">
                                                     <label>dag </label>
-
+                                                    <div class="checkbox-custom checkbox-primary">
+                                                        <input value="SU" name="days[]"type="checkbox" id="su">
+                                                        <label for="sun">Zo</label>
+                                                    </div>
                                                     <div class="checkbox-custom checkbox-primary">
                                                         <input value="MO" name="days[]"type="checkbox" id="mo">
                                                         <label for="mon">Ma</label>
@@ -749,10 +763,6 @@
                                                     <div class="checkbox-custom checkbox-primary">
                                                         <input value="SA" name="days[]"type="checkbox" id="sa">
                                                         <label for="sat">Za</label>
-                                                    </div>
-                                                    <div class="checkbox-custom checkbox-primary">
-                                                        <input value="SU" name="days[]"type="checkbox" id="su">
-                                                        <label for="sun">Zo</label>
                                                     </div>
 
                                                 </div>
@@ -848,7 +858,7 @@
 
                                                 <div class="checkbox-custom checkbox-primary">
                                                     <input value="1" name="book" type="checkbox" id="book">
-                                                    <label for="book">Toestaan</label>
+                                                    <label for="book">Aanmeldingen</label>
 
                                                 </div>
 
@@ -914,7 +924,7 @@
                                             <div class="form-group ">
                                                 <label class="margintop15">Kies een lid om toe te voegen</label>
 
-                                                <input id="new-event" type="text" name="user_name" class="form-control searchsuserwithrole"  autocomplete="off" placeholder="Zoek lid">
+                                                <input id="new-event" type="text" name="user_name" class="form-control searchsuserwithrole"  autocomplete="off" placeholder="Search User">
 
                                             </div>
                                             <div class="searchsuserwithrolebox"></div>
@@ -947,7 +957,24 @@
                                     </div>
 
 
+                                    <div class="row">
+                                    <div class="col-md-12 form-group" id="recur_edit_modebox">
+                                    <div class="radio-custom radio-d requiredanger">
+                                    <input type="radio" class="editdeletethis" checked name="recur_edit_mode" value="single" required>
+                                    <label for="editdeletethis">Wijzig / verwijder het geselecteerde
+                                    </label>
+                                    </div>
+                                    <div class="radio-custom radio-d requiredanger">
+                                    <input type="radio" class="editdeletethis" name="recur_edit_mode" value="future" required>
+                                    <label for="editdeletethis">Wijzig / verwijder alles in de toekomst</label>
+                                    </div>
+                                    <div class="radio-custom radi requiredo-danger">
+                                    <input type="radio" class="editdeletethis" name="recur_edit_mode" value="all" required>
+                                    <label for="editdeletethis">Wijzig / verwijder alle events</label>
+                                    </div>
 
+                                    </div>
+                                    </div>
 
 
                                 </div>
@@ -957,28 +984,8 @@
                     </div>
                 </div>
                 <footer class="card-footer">
-
-                    <div class="row">
-                        <div class="col-md-12 form-group" id="recur_edit_modebox">
-                            <div class="radio-custom radio-d requiredanger">
-                                <input type="radio" class="editdeletethis" checked name="recur_edit_mode" value="single" required>
-                                <label for="editdeletethis">Wijzig / verwijder het geselecteerde
-                                </label>
-                            </div>
-                            <div class="radio-custom radio-d requiredanger">
-                                <input type="radio" class="editdeletethis" name="recur_edit_mode" value="future" required>
-                                <label for="editdeletethis">Wijzig / verwijder alles in de toekomst</label>
-                            </div>
-                            <div class="radio-custom radi requiredo-danger">
-                                <input type="radio" class="editdeletethis" name="recur_edit_mode" value="all" required>
-                                <label for="editdeletethis">Wijzig / verwijder alle events</label>
-                            </div>
-
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-md-12 text-right">
-                            <button type="button" class="delbtn btn btn-danger modal-dismiss" data-toggle="modal" data-target="#delete-modal-event">Verwijder</button>
                             <button type="button" class="btn btn-default modal-dismiss" onclick="$('#eventModal').modal('hide')">Sluiten</button>
                             <button type="submit" class="btn btn-primary  " style="width: 100px">Opslaan</button>
                         </div>
@@ -993,17 +1000,452 @@
     </div>
 
 
+    {{--<div class="modal fade" id="eventModal1" tabindex="-2" role="dialog" aria-hidden="true">--}}
+        {{--<div class="modal-dialog modal-lg" role="document">--}}
+            {{--<div class="modal-content">--}}
+                {{--<form role="form" id="schedule_form" method="post" action="{{ route('admin.saveScheduleEventRqst') }}">--}}
+                {{--<div class="modal-header">--}}
+
+                    {{--<h4 class="modal-title">Add Schedule</h4>--}}
+                    {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+                        {{--<span aria-hidden="true">×</span></button>--}}
+                {{--</div>--}}
+                {{--<div class="modal-body">--}}
+                    {{--<div class="box box-warning">--}}
+
+                        {{--<!-- /.box-header -->--}}
+                        {{--<div class="box-body">--}}
+
+
+                             {{--{{csrf_field()}}--}}
+
+
+                                {{--<input type="hidden" id="schedule_id" name="schedule_id" value="">--}}
+                                {{--<input type="hidden" id="service_id" name="service_id" value="">--}}
+
+
+                                {{--<input type="hidden" id="orig_event_id" name="orig_event_id" value="">--}}
+                                {{--<input type="hidden" id="recur_instance_start" name="recur_instance_start" value="">--}}
+                                {{--<input type="hidden" id="recur_series_start" name="recur_series_start" value="">--}}
+
+
+
+                                {{--<input type="hidden" id="month" name="month" value="">--}}
+                                {{--<div class="tabs">--}}
+                                    {{--<ul class="nav nav-tabs nav-justified">--}}
+                                        {{--<li class="nav-item active">--}}
+                                            {{--<a class="nav-link active" href="#popular10" data-toggle="tab"><i class="fa fa-star"></i> Schedule</a>--}}
+                                        {{--</li>--}}
+                                        {{--<li class="nav-item">--}}
+                                            {{--<a class="nav-link" href="#recent10" data-toggle="tab">Book Users</a>--}}
+                                        {{--</li>--}}
+                                    {{--</ul>--}}
+                                    {{--<div class="tab-content">--}}
+                                        {{--<div id="popular10" class="tab-pane active">--}}
+                                            {{--<!-- time Picker -->--}}
+
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-lg-12 form-group">--}}
+                                                    {{--<!-- select -->--}}
+                                                    {{--<div class="">--}}
+                                                        {{--<label>Service</label>--}}
+                                                        {{--<?php $services=\App\Service::get()?>--}}
+                                                        {{--<select class="form-control" id="changeSe" onchange="changeService(this)" name="service" required>--}}
+                                                            {{--<option max_isers="" value="">Select Service</option>--}}
+                                                        {{--@foreach($services as $service)--}}
+                                                                {{--<option max_users="{{$service->max_users}}" value="{{$service->id}}">{{$service->service}}</option>--}}
+                                                            {{--@endforeach--}}
+                                                        {{--</select>--}}
+                                                    {{--</div>--}}
+
+                                                {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-lg-6 form-group ">--}}
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label>Date From</label>--}}
+                                                        {{--<div class="input-group date" data-date-format="dd-mm-yyyy">--}}
+                                                            {{--<input type="text" id="date_from" name="date_from" value="" class="form-control" placeholder="dd-mm-yyyy" required>--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<span class="fa fa-calendar"></span>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="col-md-6 alldayhideshow">--}}
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label>Time From</label>--}}
+
+                                                        {{--<div class="input-group">--}}
+                                                            {{--<input type="text" name="time_from" id="time_from" class="form-control timepicker" >--}}
+
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<i class="fa fa-clock-o"></i>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                        {{--<!-- /.input group -->--}}
+                                                    {{--</div>--}}
+                                                    {{--<!-- /.form group -->--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+
+
+                                            {{--<div class="row">--}}
+
+                                                {{--<div class="col-md-6 pull-left">--}}
+                                                    {{--<!-- /.form group -->--}}
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label>Date untill</label>--}}
+                                                        {{--<div class="input-group date" data-date-format="dd-mm-yyyy">--}}
+                                                            {{--<input type="text" id="date_untill" name="date_untill" value="" class="form-control" placeholder="dd-mm-yyyy" required>--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<span class="fa fa-calendar"></span>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="col-md-6 alldayhideshow">--}}
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label>Time Intill</label>--}}
+
+                                                        {{--<div class="input-group">--}}
+                                                            {{--<input type="text" name="time_untill" id="time_untill" class="form-control timepicker">--}}
+
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<i class="fa fa-clock-o"></i>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                        {{--<!-- /.input group -->--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-sm-12">--}}
+
+
+                                                    {{--<div class="allday">--}}
+                                                        {{--<label class="booklabel">All Day</label>--}}
+
+                                                        {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="1" name="allday" type="checkbox" id="allday" onclick="checkallday()">--}}
+                                                            {{--<label for="book">All Day</label>--}}
+
+                                                        {{--</div>--}}
+
+                                                    {{--</div>--}}
+
+                                                {{--</div>--}}
+
+                                            {{--</div>--}}
+
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-md-12 form-group">--}}
+
+                                                    {{--<div class="">--}}
+                                                        {{--<label>Recurring</label>--}}
+                                                        {{--<select class="form-control " onchange="chooseReccuringSchedule(this)" name="recurringtype" id="recurringtype">--}}
+                                                            {{--<option value="">Do Not Repeat</option>--}}
+                                                            {{--<option value="daily">Daily</option>--}}
+                                                            {{--<option value="weekly">Weekly</option>--}}
+                                                            {{--<option value="monthly">Monthly</option>--}}
+                                                            {{--<option value="yearly">Yearly</option>--}}
+                                                        {{--</select>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+
+                                                {{--</div>--}}
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-sm-6">--}}
+
+
+                                                    {{--<div class="daily" style="display: none">--}}
+                                                        {{--<label>Recur Every</label>--}}
+                                                        {{--<input type="number" class="form-control" name="numberrecur" value="1" id="interval">--}}
+                                                        {{--<label> <span class="toplabel">day</span> begening</label>--}}
+                                                        {{--<div class="input-group date" data-date-format="dd-mm-yyyy">--}}
+                                                            {{--<input type="text" id="date_from_recur" name="date_form_recur" value="" class="form-control" placeholder="dd-mm-yyyy">--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<span class="glyphicon glyphicon-th"></span>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                        {{--<label>and continuing </label>--}}
+
+                                                        {{--<div class="weeklydays" style="display: none">--}}
+                                                            {{--<label>on </label>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="SU" name="days[]"type="checkbox" id="su">--}}
+                                                            {{--<label for="sun">Sunday</label>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="MO" name="days[]"type="checkbox" id="mo">--}}
+                                                            {{--<label for="mon">Monday</label>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="TU" name="days[]"type="checkbox" id="tu">--}}
+                                                            {{--<label for="tue">Tuesday</label>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="WE" name="days[]"type="checkbox" id="we">--}}
+                                                            {{--<label for="wed">Wedenesday</label>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="TH" name="days[]"type="checkbox" id="th">--}}
+                                                            {{--<label for="thr">Thrusday</label>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="FR" name="days[]"type="checkbox" id="fr">--}}
+                                                            {{--<label for="fri">Friday</label>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="SA" name="days[]"type="checkbox" id="sa">--}}
+                                                            {{--<label for="sat">Saturday</label>--}}
+                                                            {{--</div>--}}
+
+                                                        {{--</div>--}}
+
+                                                        {{--<div class="monthly" style="display: none">--}}
+                                                            {{--<label>on the</label>--}}
+                                                            {{--<select class="form-control mb-3" name="monthday" id="monthdayoption">--}}
+                                                                {{--<option value="1">Ist wedenesday</option>--}}
+                                                                {{--<option value="2nd">2nd day</option>--}}
+                                                            {{--</select>--}}
+                                                            {{--<label>of each month</label>--}}
+                                                        {{--</div>--}}
+
+                                                        {{--<div class="yearly" style="display: none">--}}
+                                                            {{--<label>on the</label>--}}
+                                                            {{--<select class="form-control mb-3" name="yearday" id="yearday">--}}
+                                                                {{--<option value="1">Ist wedenesday In May</option>--}}
+                                                                {{--<option value="2nd">2nd day In May</option>--}}
+
+                                                            {{--</select>--}}
+                                                            {{--<label>of each month</label>--}}
+                                                        {{--</div>--}}
+
+                                                        {{--<select class="form-control mb-3" onchange="changeCounting(this)" name="countuingselect" id="countuingselect">--}}
+                                                            {{--<option value="forever">forever</option>--}}
+                                                            {{--<option value="for">for</option>--}}
+                                                            {{--<option value="untill">untill</option>--}}
+                                                        {{--</select>--}}
+                                                        {{--<div class="untillinput" style="display: none;">--}}
+                                                        {{--<input type="number" class="form-control"  name="untilnumber" value="1" id="untilnumber">--}}
+                                                        {{--<label>occurrences </label>--}}
+                                                        {{--</div>--}}
+                                                        {{--<div class="input-group date fordate" style="display: none;" data-date-format="dd-mm-yyyy">--}}
+                                                            {{--<input type="text" id="date_untill_recur" name="date_untill_recur" value="" class="form-control" placeholder="dd-mm-yyyy">--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<span class="fa fa-calendar"></span>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+
+                                                    {{--</div>--}}
+
+
+
+
+
+
+                                                {{--</div>--}}
+
+
+                                            {{--</div>--}}
+
+
+
+                                            {{--<div class="row">--}}
+
+                                                {{--<div class="col-sm-12">--}}
+
+
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label class="col-lg-12 control-label text-lg-lseft pt-2">Location</label>--}}
+                                                        {{--<div class="input-group">--}}
+                                                            {{--<input type="text" id="location" name="location" value="" class="form-control" placeholder="location (optional)">--}}
+                                                            {{--<div class="input-group-addon">--}}
+                                                                {{--<span class="glyphicon glyphicon-th"></span>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+
+
+                                                    {{--<div class="form-group row">--}}
+                                                        {{--<label class="col-lg-12 control-label text-lg-lseft pt-2" for="description">Description</label>--}}
+                                                        {{--<div class="col-lg-12">--}}
+                                                            {{--<textarea class="form-control" rows="3"id="description" name="description" data-plugin-maxlength maxlength="140" placeholder="Description"></textarea>--}}
+                                                            {{--<p>--}}
+                                                                {{--<code>max-length</code> set to 140.--}}
+                                                            {{--</p>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+
+
+
+
+                                                {{--</div>--}}
+
+                                            {{--</div>--}}
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-sm-6">--}}
+
+
+                                                    {{--<div class="book">--}}
+                                                        {{--<label class="booklabel">Check if users can book</label>--}}
+
+                                                        {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="1" name="book" type="checkbox" id="book">--}}
+                                                            {{--<label for="book">Book User</label>--}}
+
+                                                        {{--</div>--}}
+
+                                                    {{--</div>--}}
+
+                                                {{--</div>--}}
+
+                                                {{--<div class="col-sm-6 pull-right">--}}
+
+
+                                                    {{--<div class="book">--}}
+                                                        {{--<label class="dragablelabel">Check If dragabble</label>--}}
+
+                                                        {{--<div class="checkbox-custom checkbox-primary">--}}
+                                                            {{--<input value="1" name="dragable" type="checkbox" id="dragable">--}}
+                                                            {{--<label for="dragable">Is draggable</label>--}}
+
+                                                        {{--</div>--}}
+
+                                                    {{--</div>--}}
+
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+
+
+
+                                        {{--</div>--}}
+                                        {{--<div id="recent10" class="tab-pane">--}}
+
+
+                                            {{--<div class="rows">--}}
+
+                                                {{--<section class="card card-featured-left card-featured-quaternary">--}}
+                                                    {{--<div class="card-body">--}}
+                                                        {{--<div class="widget-summary">--}}
+                                                            {{--<div class="widget-summary-col widget-summary-col-icon">--}}
+                                                                {{--<div class="summary-icon bg-quaternary">--}}
+                                                                    {{--<i class="fa fa-user"></i>--}}
+                                                                {{--</div>--}}
+                                                            {{--</div>--}}
+                                                            {{--<div class="widget-summary-col">--}}
+                                                                {{--<div class="summary">--}}
+                                                                    {{--<h4 class="title">Total users</h4>--}}
+                                                                    {{--<div class="info">--}}
+                                                                        {{--<strong class="amount"><span id="added_count">0</span>/<span id="max_user_count">20</span></strong>--}}
+                                                                    {{--</div>--}}
+                                                                {{--</div>--}}
+                                                                {{--<div class="summary-footer">--}}
+                                                                    {{--<a class="text-muted text-uppercase"><span id="reservated_count">0</span> Reservate</a>--}}
+                                                                {{--</div>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+                                                {{--</section>--}}
+                                            {{--</div>--}}
+
+
+                                            {{--<div class="row">--}}
+                                                {{--<div class="col-md-12">--}}
+                                                    {{--<!-- select -->--}}
+                                                    {{--<div class="form-group ">--}}
+                                                        {{--<label class="margintop15">Select Users</label>--}}
+
+                                                        {{--<input id="new-event" type="text" name="user_name" class="form-control searchsuserwithrole"  autocomplete="off" placeholder="Search User">--}}
+
+                                                    {{--</div>--}}
+                                                    {{--<div class="searchsuserwithrolebox"></div>--}}
+
+
+
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                            {{--<div class="row bookedreservaterow">--}}
+                                                {{--<div class="col-md-6 form-group">--}}
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label class="margintop15">Booked Users</label>--}}
+                                                        {{--<div class="booked_users">--}}
+
+                                                        {{--</div>--}}
+
+                                                    {{--</div>--}}
+
+                                                {{--</div>--}}
+
+                                                {{--<div class="col-md-6 form-group">--}}
+                                                    {{--<div class="form-group">--}}
+                                                        {{--<label class="margintop15">Reservate Users</label>--}}
+                                                        {{--<div class="reservate_users">--}}
+
+                                                        {{--</div>--}}
+                                                    {{--</div>--}}
+
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+
+
+                                        {{--</div>--}}
+                                        {{--<hr>--}}
+                                        {{--<div class="row">--}}
+                                            {{--<div class="col-md-12 form-group" id="recur_edit_modebox">--}}
+                                                {{--<div class="radio-custom radio-d requiredanger">--}}
+                                                    {{--<input type="radio" class="editdeletethis" checked name="recur_edit_mode" value="single" required>--}}
+                                                    {{--<label for="editdeletethis">Edit/Delete This</label>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="radio-custom radio-d requiredanger">--}}
+                                                    {{--<input type="radio" class="editdeletethis" name="recur_edit_mode" value="future" required>--}}
+                                                    {{--<label for="editdeletethis">Edit/Delete Future Dates only</label>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="radio-custom radi requiredo-danger">--}}
+                                                    {{--<input type="radio" class="editdeletethis" name="recur_edit_mode" value="all" required>--}}
+                                                    {{--<label for="editdeletethis">Edit/Delete All Occurrences</label>--}}
+                                                {{--</div>--}}
+
+                                            {{--</div>--}}
+
+
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+
+
+
+
+
+
+
+
+
+                        {{--</div>--}}
+                        {{--<!-- /.box-body -->--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                {{--<div class="modal-footer">--}}
+                    {{--<button type="button" class="btn btn-danger pull-left delbtn" data-toggle="modal" data-target="#delete-modal-event" >@lang('common.delete')</button>--}}
+                    {{--<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>--}}
+                    {{--<button type="submit" class="btn btn-block btn-primary btn-sm pull-right" style="width: 100px">Save Event</button>--}}
+                {{--</div>--}}
+                {{--</form>--}}
+            {{--</div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 
     <div id="delete-modal-event" class="modal modal-danger fade" >
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                        @lang('common.delete_modal_text')
                     </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Sluit">
                         <span aria-hidden="true">&times;</span></button>
@@ -1015,7 +1457,7 @@
                         {{csrf_field()}}
                         {{method_field('DELETE')}}
                         <input name="event" type="hidden" id="hiddenevent">
-                        <button type="button" class="btn btn-outline" onclick="clickDeleteonPopup()">Delete</button>
+                        <button type="button" class="btn btn-outline" onclick="clickDeleteonPopup()">@lang('common.delete')</button>
                     </form>
                 </div>
             </div>
@@ -1043,7 +1485,7 @@
     <script type="text/javascript" src="{{asset('/admin_files/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('/admin_files/vendor/select2/js/select2.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('/admin_files/vendor/bootstrap-multiselect/bootstrap-multiselect.js')}}"></script>
-    {{--<script type="text/javascript" src="{{asset('/admin_files/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.nl.min.js')}}"></script>--}}
+    <script type="text/javascript" src="{{asset('/admin_files/vendor/bootstrap-datepicker/locales/bootstrap-datepicker.nl.min.js')}}"></script>
 
     <script>
 
@@ -1173,13 +1615,17 @@
             $("#date_from").datepicker({ format: 'dd-mm-yyyy'});
             $("#date_from_recur").datepicker({ format: 'dd-mm-yyyy'});
 
-            $('#time_from').timepicker({
-                showMeridian: false,
-                minuteStep: 15,
-        });
-            $('#time_untill').timepicker({
-                showMeridian: false,
-                minuteStep: 15, });
+//            $('#time_from').timepicker({
+//                showMeridian: false,
+//                minuteStep: 15,
+//                showInputs: false,
+//                disableFocus: true
+//        });
+//            $('#time_untill').timepicker({
+//                showMeridian: false,
+//                minuteStep: 15,
+//                showInputs: false,
+//                disableFocus: true  });
 
 
 
@@ -1280,7 +1726,7 @@
             var max_time='23:59:59';
             var businessHours=[];
 
-
+          console.log(opening_hours_obj.business_days);
 
             if( typeof opening_hours_obj.business_days !== 'undefined' ){
                 business_days=opening_hours_obj.business_days.split(",");
@@ -1389,15 +1835,6 @@ return false;
                 eventClick: function(calEvent, jsEvent, view) {
 
 
-                    if(calEvent.parent_id > 0){
-
-                        console.log(calEvent);
-
-                        window.location.href = BASE_URL+"/admin/exercises/edit/"+calEvent.parent_id+"/"+calEvent.schema_id;
-                        return false;
-                    }
-
-
 
                     var service_schedule_id = calEvent.service_schedule_id;
                     var start = calEvent.start;
@@ -1415,8 +1852,7 @@ return false;
                     $('#changeSe').val(service_schedule_id);
 //                    $('#date_from').val(startdate);
                     $("#date_from").datepicker("update", startdate);
-
-
+                    $("#date_from_recur").datepicker("update", startdate);
 
 //                    $('#date_from_recur').val(startdate);
 //                    $('#time_from').val(time_from);
@@ -1758,10 +2194,6 @@ return false;
                 //$('#tab2').trigger("shown.bs.tab");
                 window.location.href = BASE_URL+"/admin/rooster/"+url_user+"/"+scheduleid+"/"+ds.format();
             });
-
-
-
-
         }
 
         function loadConnectedUsers(user_id){

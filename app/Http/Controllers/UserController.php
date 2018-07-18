@@ -265,7 +265,6 @@ class UserController extends Controller
                 'birthday' => 'required|date|date_format:Y-m-d',
                 'klant_sinds' => 'required|date|date_format:Y-m-d',
                 'role' => 'required|in:admin,user,company',
-                'packagefk' => 'required',
                 'activation_status' => 'required',
             ], [
                 'activation_status.required' => 'Activation status is required.',
@@ -444,26 +443,17 @@ class UserController extends Controller
             return redirect()->back()->with('exception', 'Post not found !');
         }
     }
-    public function block($id, Request $request)
+    public function block($id)
     {
         $user = User::find($id);
-        if ($user->id) {
-            $reason = $request->input("block_reason");
-            $update = User::where("id", $id)->update(array("block_reason"=>$reason, "activation_status"=>0, "blocked_at"=>time()));
-            return redirect()->back()->with('message', 'User blocked successfully.');
+        if (count($user)) {
+            if ($user->featured_image) {
+                @unlink(public_path('profile_images/' . $user->avatar));
+            }
+            $user->delete();
+            return redirect()->back()->with('message', 'User delete successfully.');
         } else {
-            return redirect()->back()->with('exception', 'User not found !');
-        }
-    }
-    public function changeStatus($id, Request $request)
-    {
-        $user = User::find($id);
-        if ($user->id) {
-            $status = $request->input("activation_status");
-            $update = User::where("id", $id)->update(array( "activation_status"=>$status));
-            return redirect()->back()->with('message', 'User status changed successfully.');
-        } else {
-            return redirect()->back()->with('exception', 'User not found !');
+            return redirect()->back()->with('exception', 'Post not found !');
         }
     }
 

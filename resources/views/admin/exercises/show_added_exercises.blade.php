@@ -2,13 +2,13 @@
 $preiousexercise_id="";
 $sheduleid="";
 ?>
-    @foreach($exercises as $exercise)
+    @foreach($orders as $exercise)
 
 
                 @if($preiousexercise_id !=$exercise->exercise_id)
-                      <?php
-                      $preiousexercise_id=$exercise->exercise_id;
-                      ?>
+                        <?php
+                        $preiousexercise_id=$exercise->exercise_id;
+                        ?>
 
                       <section exercise_id="{{$exercise->exercise_id}} "class="card card-featured-left card-featured-primary mb-4" style="margin-top: 0px;">
                           <div class="card-body">
@@ -34,7 +34,7 @@ $sheduleid="";
                                       </div>
                                   </div>
                                   <div class="pull-right" style="width: 30px;">
-                                       <a  href="javascript:;" onclick="showpopup('{{$exercise->schemaexerciseid}}')" class="pull-right btn-box-tool" ><i class="fa fa-edit"></i></a>
+                                       <a href="#" class="pull-right btn-box-tool" data-toggle="modal" data-target="#editupdateschedule{{$exercise->schemaexerciseid }}"><i class="fa fa-edit"></i></a>
                                   <a href="#" class=" btn-box-tool" data-toggle="modal" data-target="#delete-exercise-p{{$exercise->schemaexerciseid}}"><i class="fa fa-trash"></i></a>
 
                                   </div>
@@ -109,14 +109,12 @@ $sheduleid="";
 
 <?php
 
-if(isset($exercise->schedule_id)){
-
-   $sheduleid=$exercise->schedule_id;
-
+if (isset($orders) && count($orders)>0) {
+    //dd($orders);
+    $sheduleid=$exercise->schedule_id;
 }
 
 ?>
-                <input type="hidden" name="scheduleid" id="scheduleid" value="{{$sheduleid}}">
                 <div class="modal fade" id="editupdateschedule{{$exercise->schemaexerciseid}}" tabindex="-2" role="dialog" aria-hidden="true" style="color: #000000;">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
@@ -136,26 +134,15 @@ if(isset($exercise->schedule_id)){
 
                                         <div class="form-group col-md-6">
                                             <label for="sets">Sets</label>
-                                            <?php
-                                            $sets=$exercise->sets;
-                                            if($exercise->sets<2)
-                                                $sets=2;
-                                            $reps=$exercise->reps;
-                                            if($exercise->reps<2)
-                                                $reps=2;
-                                            $rust=$exercise->rust;
-                                            if($exercise->rust<1)
-                                                $rust=1;
-                                            ?>
-                                            <input type="number" min="2" max="5" name="sets" id="sets{{$exercise->schemaexerciseid}}" onkeyup="showexercisesweightgrid('{{$exercise->ex_meta}}','{{$exercise->schemaexerciseid}}')" class="form-control sets" value="{{$sets}}" required>
+                                            <input type="number" min="1" max="5" name="sets" id="sets{{$exercise->schemaexerciseid}}" onkeyup="showexercisesweightgrid('{{$exercise->ex_meta}}','{{$exercise->schemaexerciseid}}')" class="form-control" value="{{$exercise->sets}}" required>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="reps">Reps</label>
-                                            <input type="number" name="reps" min="2" max="5" id="reps{{$exercise->schemaexerciseid}}" onkeyup="showexercisesweightgrid('{{$exercise->ex_meta}}','{{$exercise->schemaexerciseid}}')" class="form-control reps" value="{{$reps}}" required>
+                                            <input type="number" name="reps" min="1" max="5" id="reps{{$exercise->schemaexerciseid}}" onkeyup="showexercisesweightgrid('{{$exercise->ex_meta}}','{{$exercise->schemaexerciseid}}')" class="form-control" value="{{$exercise->reps}}" required>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="rust">Rust</label>
-                                            <input type="number" name="rust" min="1" max="5"  class="form-control" value="{{$rust}}" required>
+                                            <input type="number" name="rust" min="1" max="5"  class="form-control" value="{{$exercise->rust}}" required>
                                         </div>
 
 
@@ -172,8 +159,8 @@ if(isset($exercise->schedule_id)){
 
                                             <?php
 
-                                            $length=count(json_decode($exercise->ex_meta,true));
-                                            $metaArr=json_decode($exercise->ex_meta,true);
+                                            $length=count(json_decode($exercise->ex_meta, true));
+                                            $metaArr=json_decode($exercise->ex_meta, true);
 
 
                                             ?>
@@ -228,11 +215,11 @@ if(isset($exercise->schedule_id)){
                             <div class="modal-header">
 
                                 <h4 class="modal-title color-cus-black">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                    Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                    @lang('common.delete_modal_text')
                                 </h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span></button>
@@ -242,7 +229,7 @@ if(isset($exercise->schedule_id)){
                                 <form method="post" role="form" id="delete_form" action="{{ route('admin.deleteexerciseScheduleRqst', $exercise->schemaexerciseid)}}">
                                     {{csrf_field()}}
                                     {{method_field('DELETE')}}
-                                    <button type="submit" class="btn btn-outline">Delete</button>
+                                    <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                 </form>
                             </div>
                         </div>
@@ -265,11 +252,11 @@ if(isset($exercise->schedule_id)){
                 <div class="modal-header">
 
                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                        @lang('common.delete_modal_text')
                     </h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
@@ -279,7 +266,7 @@ if(isset($exercise->schedule_id)){
                     <form method="post" role="form" id="delete_form" action="{{ route('admin.deleteSchemaRqst',@$sheduleid)}}">
                         {{csrf_field()}}
                         {{method_field('DELETE')}}
-                        <button type="submit" class="btn btn-outline">Delete</button>
+                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                     </form>
                 </div>
             </div>
@@ -383,8 +370,8 @@ if(isset($exercise->schedule_id)){
                         });
                     </script>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Save</button>
                         <button type="submit" name="printpdf" value="1" class="btn btn-info">Save and Print Pdf</button>
                     </div>
                 </form>
@@ -400,13 +387,7 @@ if(isset($exercise->schedule_id)){
 
 
 
-<script>
-    function  showpopup(id) {
 
-        $('#editupdateschedule'+id).modal('show');
-        $('#reps'+id).trigger('keyup');
-    }
-</script>
 
 
 

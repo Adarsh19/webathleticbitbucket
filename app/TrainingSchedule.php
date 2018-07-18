@@ -9,7 +9,7 @@ class TrainingSchedule extends Model
 
     public $table ="training_schedule";
     protected $fillable = [
-        'id','schema_id','recurring','startdate','enddate','duration','weeks','days','rrule'
+        'id','schema_id','recurring','startdate','enddate','days'
 
     ];
 }

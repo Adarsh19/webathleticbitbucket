@@ -14,8 +14,8 @@ class AddColumnToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-			$table->dateTime('last_invoice_date')->default(DB::raw('CURRENT_TIMESTAMP'))->after('avatar'); 
-            $table->string('last_invoice_number', 255)->default(mt_rand(1000,10000000));
+			$table->dateTime('last_invoice_date')->default(DB::raw('CURRENT_TIMESTAMP'))->after('logo'); 
+            $table->string('last_invoice_number', 255)->default(mt_rand(1000,10000000))->after('last_invoice_date');
         });
     }
 

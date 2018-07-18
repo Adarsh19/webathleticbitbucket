@@ -282,7 +282,7 @@ var select_html= '<button class="btn btn-info btn-md hvr-grow-shadow add-user-fo
 			            {  "render": function(){return "" /*last_date_visit*/}, "title":'Laatste bezoek' },
 			            { "render": function ( data, type, user) {
 			            	// console.log(data, type, user);
-                        return '<button type="button" class="btn btn-primary btn-xs edit-user-button" data-userdata=\''+JSON.stringify(user)+'\'><i class="fa fa-pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-xs btn-success view-user-button" data-id="'+user.id+'" ><i class="fa fa-eye" aria-hidden="true"></i></button><button class="btn btn-danger btn-xs delete-user-button" data-id="'+user.id+'" ><i class="fa fa-trash" aria-hidden="true"></i></button><button class="btn btn-success btn-xs check-in-user" data-id="'+user.id+'" ><i class="fa fa-check" aria-hidden="true"></i></button><button class="btn btn-danger btn-xs favorite-user-button" data-id="'+user.id+'" hidden></button><button class="btn btn-danger btn-xs mail-user-button" data-id="'+user.id+'" hidden></button><button class="btn btn-danger btn-xs block-user-button" data-id="'+user.id+'" hidden></button>';
+                        return '<button type="button" class="btn btn-primary btn-xs edit-user-button" data-userdata=\''+JSON.stringify(user)+'\'><i class="fa fa-pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-xs btn-success view-user-button" data-id="'+user.id+'" ><i class="fa fa-eye" aria-hidden="true"></i></button><button class="btn btn-danger btn-xs delete-user-button" data-id="'+user.id+'" ><i class="fa fa-trash" aria-hidden="true"></i></button><button class="btn btn-success btn-xs check-in-user" data-id="'+user.id+'" ><i class="fa fa-check" aria-hidden="true"></i></button>';
                             },
 
                             "title" : 'Actions'
@@ -300,7 +300,7 @@ var select_html= '<button class="btn btn-info btn-md hvr-grow-shadow add-user-fo
 			            { "data": "role", "title":'Functie' },
 			            {  "render": function(){return "" /*last_date_visit*/}, "title":'Laatste bezoek' },
 			            { "render": function ( data, type, user) {
-                        return '<button type="button" class="btn btn-primary btn-xs edit-user-button" data-userdata=\''+JSON.stringify(user)+'\'><i class="fa fa-pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-xs btn-success view-user-button" data-id="'+user.id+'" ><i class="fa fa-eye" aria-hidden="true"></i></button><button class="btn btn-danger btn-xs delete-user-button" data-id="'+user.id+'" ><i class="fa fa-trash" aria-hidden="true"></i></button>';
+                        return '<button type="button" class="btn btn-primary btn-xs edit-user-button" data-userdata=\''+JSON.stringify(user)+'\'><i class="fa fa-pencil" aria-hidden="true"></i></button><button type="button" class="btn btn-xs btn-success view-user-button" data-id="'+user.id+'" ><i class="fa fa-eye" aria-hidden="true"></i></button><button class="btn btn-danger btn-xs delete-user-button" data-id="'+user.id+'" ><i class="fa fa-trash" aria-hidden="true"></i></button><button class="btn btn-danger btn-xs favorite-user-button" data-id="'+user.id+'" hidden></button><button class="btn btn-danger btn-xs mail-user-button" data-id="'+user.id+'" hidden></button><button class="btn btn-danger btn-xs block-user-button" data-id="'+user.id+'" hidden></button>';
                             },
                             "title" : 'Actions'
                         }
@@ -505,30 +505,30 @@ $(function() {
     }, garphdata);
     garphdata(start,end);
 
-	//remove check in
-	$(document).on("click", ".remove-checkin", function(){
-			log_id = $(this).data().id;
-			$.ajax({
-				url: '{{ url('admin/check-in-remove')}}',
-				method: "GET",
-				data :  {log_id : log_id},
-				success:function(response){
-					if(response.status){
-						$("#flash-message .modal-body").html(response.msg);
-						$("#flash-message .modal-body").addClass("text-success");
-						$("#flash-message").modal("show");
-						$('.nav-link.active').trigger("click");
-					}else alert("There was an error processing your request. Try back later.")
-				}
-			});
+//remove check in
+$(document).on("click", ".remove-checkin", function(){
+		log_id = $(this).data().id;
+	$.ajax({
+		url: '{{ url('admin/check-in-remove')}}',
+		method: "GET",
+		data :  {log_id : log_id},
+		success:function(response){
+			if(response.status){
+				$("#flash-message .modal-body").html(response.msg);
+				$("#flash-message .modal-body").addClass("text-success");
+				$("#flash-message").modal("show");
+				$('.nav-link.active').trigger("click");
+			}else alert("There was an error processing your request. Try back later.")
+		}
 	});
-	//remove log
-	$(document).on("click", ".remove-log", function(){
-			log_id = $(this).data().id;
-		
-			$('#delete-log-from #log_id').val(log_id);
-			$('#delete-log-modal').modal('show');
-	});
+});
+//remove log
+$(document).on("click", ".remove-log", function(){
+		log_id = $(this).data().id;
+	
+		$('#delete-log-from #log_id').val(log_id);
+		$('#delete-log-modal').modal('show');
+});
 
     // open edit user popup
 	$(document).on('click','.edit-user-button',function(){
@@ -566,36 +566,28 @@ $(function() {
 		$('#delete-user-modal').modal('show');
 	});
 	// open delete user from popup
-	$(document).on('click','.block-user-button',function(){
-		var id = $(this).data().id;
-		var url= BASE_URL+'/admin/block/'+id;
-		$('#block-user-from').attr('action',url);
+	$(document).on('click','#block-user-button',function(){
+		var id = $('#update-id').val();
+		var url= BASE_URL+'/admin/users/'+id;
+		$('#delete-user-from').attr('action',url);
 		$('#add-user-modal').modal('hide');
-		$('#block-user-modal').modal('show');
+		$('#delete-user-modal').modal('show');
 	});
-	// open status user from popup
-	$(document).on('click','.favorite-user-button',function(){
+// open delete user from users list
+	$(document).on('click','.delete-user-button',function(){
 		var id = $(this).data().id;
-		var url= BASE_URL+'/admin/status/change/'+id;
-		$('#status-user-from').attr('action',url);
-		$('#add-user-modal').modal('hide');
-		$('#status-user-modal').modal('show');
+		var url= BASE_URL+'/admin/users/'+id;
+		$('#delete-user-from').attr('action',url);
+		$('#delete-user-modal').modal('show');
 	});
-	// open delete user from users list
-		$(document).on('click','.delete-user-button',function(){
-			var id = $(this).data().id;
-			var url= BASE_URL+'/admin/users/'+id;
-			$('#delete-user-from').attr('action',url);
-			$('#delete-user-modal').modal('show');
-		});
-	// view user button code 
+// view user button code 
 
 
-	$(document).on('click','.view-user-button',function(){
-			var id = $(this).data().id;
-			var url= BASE_URL+'/admin/users/'+id;
-			window.open(url, '_blank');
-		});
+$(document).on('click','.view-user-button',function(){
+		var id = $(this).data().id;
+		var url= BASE_URL+'/admin/users/'+id;
+		window.open(url, '_blank');
+	});
 
 	$("#add-user-form").validate({
 
@@ -936,11 +928,6 @@ $('.droppable-checkin').droppable({
 		userTuple = $(ui.draggable[0]).parent().parent();
 		$(".check-in-user", userTuple).trigger("click");
 }});
-$('.droppable-delete').droppable({
-		drop : function(event, ui){
-		userTuple = $(ui.draggable[0]).parent().parent();
-		$(".delete-user-button", userTuple).trigger("click");
-}});
 $('.droppable-block').droppable({
 		drop : function(event, ui){
 		userTuple = $(ui.draggable[0]).parent().parent();
@@ -949,7 +936,7 @@ $('.droppable-block').droppable({
 $('.droppable-favorite').droppable({
 		drop : function(event, ui){
 		userTuple = $(ui.draggable[0]).parent().parent();
-		$(".favorite-user-button", userTuple).trigger("click");
+		$(".favorite-user-button-user-button", userTuple).trigger("click");
 }});
 $('.droppable-mail').droppable({
 		drop : function(event, ui){

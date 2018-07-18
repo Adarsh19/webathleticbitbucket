@@ -1,0 +1,6 @@
+# pack-refs with: peeled fully-peeled sorted 
+efcef571675052cb3f683e77bfe115fca87ed01e refs/remotes/origin/dev_ilya
+28685304a3d09afb53d9b571ad38abd0895e093d refs/remotes/origin/master
+28685304a3d09afb53d9b571ad38abd0895e093d refs/remotes/origin/rat
+28685304a3d09afb53d9b571ad38abd0895e093d refs/remotes/origin/testftp
+28685304a3d09afb53d9b571ad38abd0895e093d refs/remotes/origin/webserver18

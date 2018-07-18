@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Middleware\CheckAdminOrCompanyMiddleware;
+use App\Http\Middleware\AdminMiddleware;
 use App\ExerciseAccentMuscleGroup;
 use App\ExerciseGoal;
 use App\ExerciseMaterial;
 use App\ExerciseTrainingLevel;
-use Illuminate\Support\Facades\Gate;
-use Jleon\LaravelPnotify\Notify;
 
 class CompanyController extends Controller
 {
@@ -31,7 +29,7 @@ class CompanyController extends Controller
     */
 	public function __construct()
     {
-        $this->middleware(CheckAdminOrCompanyMiddleware::class, ['except' => ['show']]);
+        $this->middleware(AdminMiddleware::class, ['except' => ['show']]);
     }
 
     /**
@@ -42,11 +40,7 @@ class CompanyController extends Controller
     */
 	public function index(Request $request)
     {
-        $user_statuses = DB::select('SELECT
-                        `user_statuses`.* 
-                    FROM
-                        `user_statuses` WHERE `user_statuses`.status_type = "company"');
-        return view('admin.pages.companys.index', compact('user_statuses'));
+        return view('admin.pages.companys.index');
     }
 
     /**
@@ -90,17 +84,14 @@ class CompanyController extends Controller
                 "business_hours"=>array(),
             );
         }
-        $user_statuses = DB::select('SELECT
-                        `user_statuses`.* 
-                    FROM
-                        `user_statuses` WHERE `user_statuses`.status_type = "company"');
+        
         $materials=ExerciseMaterial::where('user_id', $id)->get();
         $goals=ExerciseGoal::where('user_id', $id)->get();
         $training_levels=ExerciseTrainingLevel::where('user_id', $id)->get();
         $accent_muscle_group=ExerciseAccentMuscleGroup::where('user_id', $id)->get();
         $company = Company::where("id", $id)->first();
         $companyUI = CompanyUI::where("company_id", $company->id)->first();
-        return view('admin.pages.companys.edit', compact('company', 'opening_hours', 'materials', 'goals', 'training_levels', 'accent_muscle_group', 'companyUI', 'user_statuses'));
+        return view('admin.pages.companys.edit', compact('company', 'opening_hours', 'materials', 'goals', 'training_levels', 'accent_muscle_group', 'companyUI'));
     }
     public function updateUi(Request $request){
         $data = $this->validate(
@@ -221,11 +212,7 @@ class CompanyController extends Controller
 	public function get()
     {
         $data = [];
-        if(isAdmin()){
-            $companies = Company::select('id', 'company_name', 'Soort', 'phone_main', 'email_main', 'address', 'City', 'Contactpersoon')->get();
-        }
-        else
-            $companies = Company::select('id', 'company_name', 'Soort', 'phone_main', 'email_main', 'address', 'City', 'Contactpersoon')->where('id',\Auth::user()->parent_id)->get();   
+        $companies = Company::select('id', 'company_name', 'Soort', 'phone_main', 'email_main', 'address', 'City', 'Contactpersoon')->get();
         foreach ($companies as $key => $company) {
             $data[$key]['id'] = $company->id;
             $data[$key]['name'] = $company->company_name;
@@ -235,12 +222,9 @@ class CompanyController extends Controller
             $data[$key]['address'] = $company->address;
             $data[$key]['role'] = $company->City;
             $data[$key]['Bedrijfsnaam'] = $company->Contactpersoon;
-            $delete="";
-            if(isAdmin())
-              $delete='<button class="btn btn-danger btn-xs delete-button" onclick = "remove(' . $company->id . ');" data-id="' . $company->id . '"data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash"></i></button>';
             $data[$key]['action'] = '<a href="' . route("admin.companys.show", $company->id) . '"><button class="btn btn-info btn-xs view-button" data-id="' . $company->id . '" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></button></a>
-            <a href="' . route("admin.companys.edit", $company->id) . '"><button class="btn btn-primary btn-xs edit-button" data-id="' . $company->id . '" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></button></a>'.$delete;
-            
+            <a href="' . route("admin.companys.edit", $company->id) . '"><button class="btn btn-primary btn-xs edit-button" data-id="' . $company->id . '" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></button></a>
+            <button class="btn btn-danger btn-xs delete-button" onclick = "remove(' . $company->id . ');" data-id="' . $company->id . '"data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash"></i></button>';
         }
         return Response::json(['data' => $data]);
     }
@@ -344,7 +328,7 @@ class CompanyController extends Controller
     {
 
         $ispresant=ServiceOpeningHours::where('user_id', $user_id)->get();
-        if (count($ispresant)==0) {
+        if (empty($ispresant)) {
             $create=ServiceOpeningHours::create([
                 'min_time'=>$request->min_time,
                 'max_time'=>$request->max_time,
@@ -353,11 +337,10 @@ class CompanyController extends Controller
                 'business_days'=>implode($request->days, ","),
             ]);
             if ($create) {
-                Notify::success('Opening Hours saved successfully');
+                return redirect()->back()->with('message', 'Opening Hours saved successfully');
             } else {
-                Notify::error('Some error occurred hile saving details');
+                return redirect()->back()->with('message', 'Some error occurred hile saving details');
             }
-
         } else {
             $update=ServiceOpeningHours::where('user_id', $user_id)->update([
                 'min_time'=>$request->min_time,
@@ -366,14 +349,12 @@ class CompanyController extends Controller
                 'business_days'=>implode($request->days, ","),
             ]);
             if ($update) {
-                Notify::success('Opening Hours updated successfully');
+                return redirect()->back()->with('message', 'Opening Hours updated successfully');
             } else {
-                Notify::error('Some error occurred while updating details');
+                return redirect()->back()->with('message', 'Some error occurred hile updating details');
             }
         }
-        return redirect()->back();
     }
-
 
     /**
      * Company add page
@@ -382,12 +363,7 @@ class CompanyController extends Controller
     */
 	public function new()
     {
-        $user_statuses = DB::select('SELECT
-                        `user_statuses`.* 
-                    FROM
-                        `user_statuses` WHERE `user_statuses`.status_type = "company"');
-
-        return view('admin.pages.companys.add', compact('user_statuses'));
+        return view('admin.pages.companys.add');
     }
 	
 	/**

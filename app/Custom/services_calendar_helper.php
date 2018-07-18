@@ -528,7 +528,3 @@ function removeExceptionDates($event_id)
     $result=DB::delete($sql);
     return $result;
 }
-
-function public_permissions(){
-    public_permissionsinner();
-}

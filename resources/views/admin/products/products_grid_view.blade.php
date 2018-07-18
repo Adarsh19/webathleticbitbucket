@@ -24,10 +24,9 @@
         display: none;
     }
 </style>
+@if(!strlen(Request::segment(3)))
 
-@if(!strlen(Request::segment(4)))
-
-<div class="col-md-12">
+<div class="">
 
                         {{--<div class="modal-header">--}}
                             {{--<h4>Create Groups</h4>--}}
@@ -53,7 +52,7 @@
                                 @foreach($productgroups as $productgroup)
                                    
                                         <div class="card card-cus">
-                                        <div class="itempro thumbnail " id="{{ $productgroup->name }}" >
+                                        <div class="itempro thumbnail " id="{{ $productgroup->name }}">
                                             <div class="image view view-first">
                                                 <img  class="card-img" src="{{ asset('admin/images/groups/products/'.$productgroup->imagepath)}}" alt="image" />
                                                 <div class="mask">
@@ -62,9 +61,8 @@
                                                         {{--<a href="#"><i class="fa fa-link"></i></a>--}}
                                                         <a href="#" data-toggle="modal" data-target="#edit-modal{{$productgroup->id}}"><i class="fa fa-edit"></i></a>
                                                         <a href="#" data-toggle="modal" data-target="#delete-modal{{$productgroup->id}}"><i class="fa fa-times"></i></a>
-
+                                                        <a href="{{ route('admin.showSubGroupRqst',$productgroup->slug) }}"><i class="fa fa-eye"></i></a>
                                                     </div>
-                                                    <a href="{{ route('admin.showSubGroupRqst',[Request::segment(3),$productgroup->slug]) }}"><i class="fa fa-eye plusicon"></i></a>
                                                     <p>{{ $productgroup->name }}</p>
                                                 </div>
                                             </div>
@@ -94,8 +92,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-info">Submit</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-warning">Submit</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -108,11 +106,11 @@
                                                 <div class="modal-header">
 
                                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                                        @lang('common.delete_modal_text')
                                                     </h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span></button>
@@ -122,7 +120,7 @@
                                                     <form method="post" role="form" id="delete_form" action="{{ route('admin.deleteProductSubGrpRqst',$productgroup->id) }}">
                                                         {{csrf_field()}}
                                                         {{method_field('DELETE')}}
-                                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -167,7 +165,7 @@
                                             </div>
                                             <div class="caption">
                                                 <p><span>{{ $product->name }}</span> </p>
-                                                <p><strong>Price</strong>: <span><i class="fa fa-euro"></i> {{ $product->price }}</span> <strong>Qty</strong>: <span>{{ $product->stock }}  @if(isset($orders[$product->id]))<strong>Sold </strong>: <span>{{ $orders[$product->id] }}</span>@endif</span></p>
+                                                <p><strong>Price</strong>: <span>$ {{ $product->price }}</span> <strong>Qty</strong>: <span>{{ $product->stock }}  @if(isset($orders[$product->id]))<strong>Sold </strong>: <span>{{ $orders[$product->id] }}</span>@endif</span></p>
                                             </div>
                                         </div>
                                     </div>
@@ -239,8 +237,8 @@
 
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-info">Submit</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-warning">Submit</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -293,11 +291,11 @@
                                                                 <div class="modal-header">
 
                                                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                                                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                                                        @lang('common.delete_modal_text')
                                                                     </h4>
                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                         <span aria-hidden="true">&times;</span></button>
@@ -307,7 +305,7 @@
                                                                     <form method="post" role="form" id="delete_form" action=" {{ route('admin.deleteProductRqst',$variation['id'] ) }}">
                                                                         {{csrf_field()}}
                                                                         {{method_field('DELETE')}}
-                                                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                                                     </form>
                                                                 </div>
                                                             </div>
@@ -378,8 +376,8 @@
 
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-info">Submit</button>
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-warning">Submit</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -401,11 +399,11 @@
                                                 <div class="modal-header">
 
                                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                                        @lang('common.delete_modal_text')
                                                     </h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span></button>
@@ -415,7 +413,7 @@
                                                     <form method="post" role="form" id="delete_form" action=" {{ route('admin.deleteProductRqst',$product->id ) }}">
                                                         {{csrf_field()}}
                                                         {{method_field('DELETE')}}
-                                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -433,10 +431,10 @@
 
 
 
-   <div class="modal fade" id="productModal" tabindex="-2" role="dialog" aria-hidden="true">
+<div class="modal fade" id="productModal" tabindex="-2" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form method="POST" action="{{ route('admin.addProductRqst',$user->id) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.addProductRqst') }}" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="modal-header">
                     <h5 class="modal-title">Add Products</h5>
@@ -463,13 +461,7 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label for="tax">Product Tax</label>
-                            {{--<input type="tax" name="tax[]" class="form-control"  required>--}}
-
-                            <select name="tax[]" class="form-control"  required>
-                                <option value="0">0%</option>
-                                <option value="6">6%</option>
-                                <option value="21">21%</option>
-                            </select>
+                            <input type="tax" name="tax[]" class="form-control"  required>
                         </div>
                         </div>
                         <div class="row">
@@ -499,8 +491,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button"  id="variation" class="btn btn-info">Has Variation Product</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-info">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Submit</button>
                 </div>
             </form>
         </div>
@@ -516,7 +508,7 @@
     <div class="modal fade" id="groupModal" tabindex="-2" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('admin.addProductGroupRqst',$user->id) }}">
+                <form method="POST" action="{{ route('admin.addProductGroupRqst') }}">
                     {{ csrf_field() }}
                     <div class="modal-header">
                         <h5 class="modal-title">Add Product Group</h5>
@@ -531,15 +523,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-@elseif(Request::segment(4)=="product-group")
+@elseif(Request::segment(3)=="product-group")
     {{--Sub groups view--}}
     <div class="col-md-12">
         {{--<div class="modal-header">--}}
@@ -580,10 +572,8 @@
                                         {{--<a href="#"><i class="fa fa-link"></i></a>--}}
                                         <a href="#" data-toggle="modal" data-target="#edit-modal{{$productgroup->id}}"><i class="fa fa-edit"></i></a>
                                         <a href="#" data-toggle="modal" data-target="#delete-modal{{$productgroup->id}}"><i class="fa fa-times"></i></a>
-{{--                                        <a href="admin/products/{{Request::segment(4)}}/product-sub-group/{{$productgroup->slug}}"><i class="fa fa-eye"></i></a>--}}
-
+                                        <a href="{{ route('admin.showSubSubGroupsRqst',$productgroup->slug) }}"><i class="fa fa-eye"></i></a>
                                     </div>
-                                    <a href="{{ route('admin.showSubSubGroupsRqst',[Request::segment(3), $productgroup->slug]) }}"><i class="fa fa-eye plusicon"></i></a>
                                     <p>{{ $productgroup->name }}</p>
                                 </div>
                             </div>
@@ -612,8 +602,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-info">Submit</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-warning">Submit</button>
                                     </div>
                                 </form>
                             </div>
@@ -627,11 +617,11 @@
                                 <div class="modal-header">
 
                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                        @lang('common.delete_modal_text')
                                     </h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span></button>
@@ -641,7 +631,7 @@
                                     <form method="post" role="form" id="delete_form" action="{{ route('admin.deleteProductSubGrpRqst',$productgroup->id) }} ">
                                         {{csrf_field()}}
                                         {{method_field('DELETE')}}
-                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                     </form>
                                 </div>
                             </div>
@@ -683,7 +673,7 @@
                             </div>
                             <div class="caption">
                                 <p><span>{{ $product->name }}</span> </p>
-                                <p><strong>Price</strong>: <span><i class="fa fa-euro"></i> {{ $product->price }}</span> <strong>Qty</strong>: <span>{{ $product->stock }}  @if(isset($orders[$product->id]))<strong>Sold</strong>: <span>{{ $orders[$product->id] }}</span>@endif</span></p>
+                                <p><strong>Price</strong>: <span>$ {{ $product->price }}</span> <strong>Qty</strong>: <span>{{ $product->stock }}  @if(isset($orders[$product->id]))<strong>Sold</strong>: <span>{{ $orders[$product->id] }}</span>@endif</span></p>
 
                             </div>
                         </div>
@@ -720,12 +710,7 @@
                                                 </div>
                                                 <div class="form-group col-md-6">
                                                     <label for="tax">Product Tax</label>
-                                                    <select name="tax[]" class="form-control"  required>
-                                                        <option @if($product->tax ==0) selected @endif value="0">0%</option>
-                                                        <option @if($product->tax ==6) selected @endif value="6">6%</option>
-                                                        <option @if($product->tax ==21) selected @endif value="21">21%</option>
-                                                    </select>
-                                                    {{--<input type="tax" name="tax" class="form-control" value="{{ $product->tax }}" required>--}}
+                                                    <input type="tax" name="tax" class="form-control" value="{{ $product->tax }}" required>
                                                 </div>
                                                 </div>
                                                 <div class="row">
@@ -755,8 +740,8 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-info">Submit</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-warning">Submit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -805,11 +790,11 @@
                                                 <div class="modal-header">
 
                                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                                        @lang('common.delete_modal_text')
                                                     </h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span></button>
@@ -819,7 +804,7 @@
                                                     <form method="post" role="form" id="delete_form" action=" {{ route('admin.deleteProductRqst',$variation['id'] ) }}">
                                                         {{csrf_field()}}
                                                         {{method_field('DELETE')}}
-                                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -889,8 +874,8 @@
 
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-info">Submit</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-warning">Submit</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -911,11 +896,11 @@
                                 <div class="modal-header">
 
                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
-                                        Are you sure want to delete this ?
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
+                                        @lang('common.delete_modal_text')
                                     </h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span></button>
@@ -925,7 +910,7 @@
                                     <form method="post" role="form" id="delete_form" action=" {{ route('admin.deleteProductRqst',$product->id ) }}">
                                         {{csrf_field()}}
                                         {{method_field('DELETE')}}
-                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                     </form>
                                 </div>
                             </div>
@@ -946,7 +931,7 @@
     <div class="modal fade" id="groupModal" tabindex="-2" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('admin.addProductGroupRqst',$user->id) }}">
+                <form method="POST" action="{{ route('admin.addProductGroupRqst') }}">
                     {{ csrf_field() }}
                     <div class="modal-header">
                         <h5 class="modal-title">Add Sub Group</h5>
@@ -961,8 +946,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Submit</button>
                     </div>
                 </form>
             </div>
@@ -972,7 +957,7 @@
     <div class="modal fade" id="productModal" tabindex="-2" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('admin.addProductRqst',$user->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('admin.addProductRqst') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="modal-header">
                         <h5 class="modal-title">Add Products to {{ $group->name }}</h5>
@@ -1029,8 +1014,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button"  id="variation" class="btn btn-info">Has Variation Product</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-warning">Submit</button>
                     </div>
                 </form>
             </div>
@@ -1038,7 +1023,7 @@
     </div>
 
 
-@elseif(Request::segment(4)=="product-sub-group")
+@elseif(Request::segment(3)=="product-sub-group")
     <div class="col-md-9">
         {{--<div class="modal-header">--}}
             {{--<h4>You are in Sub Group: {{$subgroup->name}}</h4>--}}
@@ -1046,7 +1031,19 @@
         <ul id="products1">
 
 
+            {{--<li>--}}
+                {{--<a class="item thumbnail" href="{{ route('admin.showSubGroupRqst',$group->slug) }}">--}}
+                    {{--<i class=" fassbtn fa fa-arrow-circle-left"></i>--}}
+                {{--</a>--}}
+            {{--</li>--}}
+            {{--@auth--}}
 
+            {{--<li>--}}
+                {{--<a class="item thumbnail " href="#" data-toggle="modal" data-target="#productModal">--}}
+                    {{--<h4>Add Product</h4>--}}
+                {{--</a>--}}
+            {{--</li>--}}
+            {{--@endauth--}}
 
 
             @if(sizeof($products) > 0 )
@@ -1080,7 +1077,7 @@
                             <div class="caption">
                                 {{--<p>{{ $product->name }}</p>--}}
                                 <p><span>{{ $product->name }}</span> </p>
-                                <p><strong>Price</strong>: <span><i class="fa fa-euro"></i> {{ $product->price }}</span> <strong>Qty</strong>: <span>{{ $product->stock }}  @if(isset($orders[$product->id]))<strong>Sold</strong>: <span>{{ $orders[$product->id] }}</span>@endif</span></p>
+                                <p><strong>Price</strong>: <span>$ {{ $product->price }}</span> <strong>Qty</strong>: <span>{{ $product->stock }}  @if(isset($orders[$product->id]))<strong>Sold</strong>: <span>{{ $orders[$product->id] }}</span>@endif</span></p>
                             </div>
                         </div>
                     </div>
@@ -1147,7 +1144,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-info">Submit</button>
+                                            <button type="submit" class="btn btn-warning">Submit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -1199,10 +1196,10 @@
                                                 <div class="modal-header">
 
                                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
                                                         Are you sure want to delete this aa?
                                                     </h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1214,7 +1211,7 @@
                                                     <form method="post" role="form" class="delete_form" action="{{ route('admin.deleteProductRqst',$variation['id'] ) }}">
                                                         {{csrf_field()}}
                                                         {{method_field('DELETE')}}
-                                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -1285,7 +1282,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-info">Submit</button>
+                                                        <button type="submit" class="btn btn-warning">Submit</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -1308,10 +1305,10 @@
                                 <div class="modal-header">
 
                                     <h4 class="modal-title">
-							<span class="fa-stack fa-sm">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fa fa-trash fa-stack-1x"></i>
-							</span>
+                            <span class="fa-stack fa-sm">
+                                <i class="fa fa-square-o fa-stack-2x"></i>
+                                <i class="fa fa-trash fa-stack-1x"></i>
+                            </span>
                                         Are you sure want to delete this aa?
                                     </h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1322,7 +1319,7 @@
                                     <form method="post" role="form" class="delete_form" action="{{ route('admin.deleteProductRqst',$product->id ) }}">
                                         {{csrf_field()}}
                                         {{method_field('DELETE')}}
-                                        <button type="submit" class="btn btn-outline">Delete</button>
+                                        <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                     </form>
                                 </div>
                             </div>
@@ -1347,7 +1344,7 @@
     <div class="modal fade" id="productModal" tabindex="-2" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{route('admin.addProductRqst',$user->id)}}" enctype="multipart/form-data">
+                <form method="POST" action="{{route('admin.addProductRqst')}}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="modal-header">
                         <h5 class="modal-title">Add Products to {{ $subgroup->name }}</h5>
@@ -1406,7 +1403,7 @@
                     <div class="modal-footer">
                         <button type="button"  id="variation" class="btn btn-info">Has Variation Product</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info">Submit</button>
+                        <button type="submit" class="btn btn-warning">Submit</button>
                     </div>
                 </form>
             </div>

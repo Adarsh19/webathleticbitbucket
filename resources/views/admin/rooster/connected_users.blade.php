@@ -1,7 +1,7 @@
 
 
 <div class="col-lg-12">
-    <p class="h5 font-weight-light"><i class="fa fa-user"></i> Gevonden leden</p>
+    <p class="h5 font-weight-light"><i class="fa fa-user"></i> Connected users</p>
 
     <hr/>
 
@@ -29,7 +29,7 @@
 								<i class="fa fa-square-o fa-stack-2x"></i>
 								<i class="fa fa-trash fa-stack-1x"></i>
 							</span>
-                                    Are you sure want to delete this ?
+                                    @lang('common.delete_modal_text')
                                 </h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span></button>
@@ -42,7 +42,7 @@
                                       action=" {{ route('admin.deleteConnectedUserRqst',$connected_user->user_id ) }}">
                                     {{csrf_field()}}
                                     {{method_field('DELETE')}}
-                                    <button type="submit" class="btn btn-outline">Delete</button>
+                                    <button type="submit" class="btn btn-outline">@lang('common.delete')</button>
                                 </form>
                             </div>
                         </div>

@@ -90,9 +90,7 @@
 									<table class="table table-bordered table-striped mb-0" id="datatable-tabletools">
 										<thead>
 											<tr>
-												@if(isAdmin())
 												<th>Bedrijfsnaam</th>
-												@endif
 												<th>Bedrijfsnaam</th>
 												<th>Soort</th>
 												<th>Telefoon Algemeen</th>
@@ -241,12 +239,10 @@ $(document).on('change','.dataTables_wrapper .datatable-checkbox-header',functio
         } );
  	(function($) {
 
-var select_html = '@if(isAdmin())<a href="{{ route('admin.newCompanysRoute') }}" class="btn  btn-force btn-info btn-md hvr-grow-shadow pull-right">@lang('common.add_company')</a>@endif<div class="pull-right"><span style="width:auto;line-height:2.5;padding:0;"> Filter op </span> <select class="form-control" >';
-    
-    @foreach($user_statuses as $user_status)
-        select_html+= '<option value="{{$user_status->id}}">{{$user_status->status}}</option>';
-    @endforeach    
-
+var select_html = '<a href="{{ route('admin.newCompanysRoute') }}" class="btn  btn-force btn-info btn-md hvr-grow-shadow pull-right">@lang('common.add_company')</a><div class="pull-right"><span style="width:auto;line-height:2.5;padding:0;"> Filter op </span> <select class="form-control" >';
+    select_html+= '<option> Item 1</option>';
+    select_html+= '<option> Item 2</option>';
+    select_html+= '<option> Item 3</option>';
     select_html+= '</select>';
 
 
@@ -258,9 +254,8 @@ var select_html = '@if(isAdmin())<a href="{{ route('admin.newCompanysRoute') }}"
 			ajax: "{{ route('admin.getCompanysRoute') }}",
 			dom: 'Bfrtip',
 			buttons: [
-			@if(isAdmin())
 			{
-                text:'<span class="btn hvr-grow-shadow checkbox-delete-btn"><i class="fa fa-trash"></i></span>',
+                text:     '<span class="btn hvr-grow-shadow checkbox-delete-btn"><i class="fa fa-trash"></i></span>',
                 titleAttr:'Delete',
                 action: function(e, dt, node, config){
                     var el = $(e.target);
@@ -278,7 +273,7 @@ var select_html = '@if(isAdmin())<a href="{{ route('admin.newCompanysRoute') }}"
                     modal.modal('show');
                 }
             },
-			@endif
+			
 			{
                 extend:    'print',
                 text:      '<span class="hvr-grow-shadow"><i class="fa fa-file-text-o"></i> Print</span>',
@@ -296,9 +291,7 @@ var select_html = '@if(isAdmin())<a href="{{ route('admin.newCompanysRoute') }}"
             }
         ],
 			columns: [
-						@if(isAdmin())
 						{ "render": function(data, type, user){return datatableCheckbox(user.id)}, "title":datatableCheckboxHeader() },
-						@endif
 						{ data: "name" },
 			            { data: "username" },
 			            { data: "email" },

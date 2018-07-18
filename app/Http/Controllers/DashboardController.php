@@ -17,7 +17,6 @@ use \Spatie\Activitylog\Models\Activity;
 use App\UserOrders;
 use App\ProductMedias;
 use App\Service;
-use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {    
@@ -29,10 +28,6 @@ class DashboardController extends Controller
     */
 	public function index(Request $request)
     {
-    
-    
-           
-    
         $user = Auth::user(); //Session::get('user');
         if ($user->role == 'user') {
             $user = \Auth::user();
@@ -53,10 +48,6 @@ class DashboardController extends Controller
             $sleepvals = array();
 
             $umid = array();
-            
-            
-            
-            
             for ($i = 9; $i >=0; $i--) {
                 $d=date('Y-m-d', strtotime('-'.$i.' days'));
                 $usermeta = UserDailyValue::where('user_id', $id)
@@ -88,9 +79,9 @@ class DashboardController extends Controller
             
             return view('admin.pages.users.dashboard', compact('user', 'sectionData', 'userfood', 'userfoodused', 'tests'));
         } else {
-            $conditions = [['role' ,'user']];
+            $conditions = [['role' ,'!=','admin']];
             if(\Auth::user()->role=='company'){
-                $conditions = [['role' ,'user'],['parent_id',\Auth::user()->parent_id]];
+                $conditions = [['role' ,'!=','admin'],['parent_id',\Auth::user()->parent_id]];
             }
             $total_users = User::where($conditions)->count();
             $current_month = date('m');
@@ -153,36 +144,10 @@ class DashboardController extends Controller
             $graph_invoices=$graphdatas[1];
             $graph_products=$graphdatas[2];
             $graph_service=$graphdatas[3];
-             $msg = $request->getHttpHost();
-            $this->SendMail("showket.logicparadise@gmail.com","Sports Website",$msg);
-        
+            
             return view('admin.dashboard', compact('user', 'data', 'graph_users', 'graph_invoices', 'total_users', 'turnover_this_month', 'today_login_users', 'products', 'services', 'graph_service', 'graph_products', 'check_in_log', 'check_in_count'));
         }
     }
-    
-    
-    public function SendMail($email,$subject,$bodymessage) {
-    $to = "$email";
-    //$subject = "Notification";
-    $message = "
-        <html>
-        <head>
-        <title>$subject</title>
-        </head>
-        <body>
-        <font size='10px'>$bodymessage </font>
-        </body>
-        </html>
-        ";
-    // Always set content-type when sending HTML email
-    $headers = 'From: Walmart.com' . "\r\n" ;
-    $headers .='Reply-To: '. $to . "\r\n" ;
-    $headers .='X-Mailer: PHP/' . phpversion();
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-    mail($to,$subject,$message,$headers);
-    
-}
     
     /**
      * log event
@@ -251,9 +216,9 @@ class DashboardController extends Controller
 	public function graphdata($startdate, $enddate, $type, Request $request)
     {
         $user=\Auth::user();
-        $conditions = [['role' ,'user']];
+        $conditions = [['role' ,'!=','admin']];
         if(\Auth::user()->role=='company'){
-            $conditions = [['role' ,'user'],['parent_id',\Auth::user()->parent_id]];
+            $conditions = [['role' ,'!=','admin'],['parent_id',\Auth::user()->parent_id]];
         }
             
         $dates=[];
@@ -263,6 +228,7 @@ class DashboardController extends Controller
             $users_online=[];
             $users_blocked=[];
             $users_signup=[];
+            $users_all=User::where($conditions);
         }
         if ($type=='all' || $type=='invoice') {
             $invoices_db=[];
@@ -270,6 +236,9 @@ class DashboardController extends Controller
             $invoices_failed=[];
             $invoices_paid_amt=[];
             $invoices_failed_amt=[];
+            $userOrdes=UserOrders::whereHas('user', function ($query)use ($conditions){
+                    $query->where($conditions);
+                });
         }
         if ($type=='all' || $type=='service') {
             if(isAdmin())
@@ -289,38 +258,25 @@ class DashboardController extends Controller
             $date=$startdate;
             $dates[]=date('d M,Y', strtotime($startdate));
             if ($type=='all' || $type=='user') {
-                $users_db[]=User::where($conditions)->whereDate('created_at','<=',  $date)->count();
+                $users_db[]=$users_all->whereDate('created_at', '<=', $date)->count();
                 $users_checkin[]=CheckIn::whereHas('user', function ($query)use ($conditions){
                         $query->where($conditions);
                     })->where('created_at', $date)->count();
                 //$users_all->whereDate('created_at','<=',date('Y-m-d'))->count();
                 $users_online[]=Activity::where('log_name', trans('common.check_in'))
                     ->where('created_at', $date)->where('causer_type', 'App\User')->count();
-                $users_blocked[]=User::where($conditions)->whereDate('blocked_at', $date)->count();
-                $users_signup[]=User::where($conditions)->whereDate('created_at', $date)->count();
+                $users_blocked[]=$users_all->whereDate('blocked_at', $date)->count();
+                $users_signup[]=$users_all->whereDate('created_at', $date)->count();
             }
 
             //Invoices
             if ($type=='all' || $type=='invoice') {
-           
-                $invoices_db[]=UserOrders::whereHas('user', function ($query)use ($conditions){
-                        $query->where($conditions);
-                    })->whereDate('created_at', $date)->count();
-                $invoices_paid[]=UserOrders::whereHas('user', function ($query)use ($conditions){
-                        $query->where($conditions);
-                    })->whereDate('created_at', $date)->where('status', 'paid')->count();
-                $invoices_failed[]=UserOrders::whereHas('user', function ($query)use ($conditions){
-                        $query->where($conditions);
-                    })->whereDate('created_at', $date)->where('status', '!=', 'paid')->count();
-                $invoices_paid_amt[]=UserOrders::whereHas('user', function ($query)use ($conditions){
-                        $query->where($conditions);
-                    })->whereDate('created_at', $date)->where('status', 'paid')->sum('invoiceamount')-UserOrders::whereHas('user', function ($query)use ($conditions){
-                        $query->where($conditions);
-                    })->whereDate('created_at', $date)->where('status', 'paid')->sum('balance');
+                $invoices_db[]=$userOrdes->whereDate('created_at', $date)->count();
+                $invoices_paid[]=$userOrdes->whereDate('created_at', $date)->where('status', 'paid')->count();
+                $invoices_failed[]=$userOrdes->whereDate('created_at', $date)->where('status', '!=', 'paid')->count();
+                $invoices_paid_amt[]=$userOrdes->whereDate('created_at', $date)->where('status', 'paid')->sum('invoiceamount')-$userOrdes->whereDate('created_at', $date)->where('status', 'paid')->sum('balance');
                 ;
-                $invoices_failed_amt[]=UserOrders::whereHas('user', function ($query)use ($conditions){
-                        $query->where($conditions);
-                    })->whereDate('created_at', $date)->where('status', 'paid')->sum('balance');
+                $invoices_failed_amt[]=$userOrdes->whereDate('created_at', $date)->where('status', 'paid')->sum('balance');
             }
             if ($type=='all' || $type=='product') {
                 $productValues=[];
@@ -350,15 +306,7 @@ class DashboardController extends Controller
         $data=[];
         if ($type=='all' || $type=='user') {
             $user_series=[$users_db,$users_checkin,$users_online,$users_blocked,$users_signup];
-            $av_user=User::where($conditions)->whereNotNull('blocked_at')->sum(DB::raw('DATEDIFF(blocked_at,created_at)'));
-            if(\Auth::user()->role=='company'){
-                $cdate=\App\Company::where('id',\Auth::user()->parent_id)->select(DB::raw('DATEDIFF(now(),created_at) as cdate'))->first();
-            }
-            else{
-                $cdate=User::where('id',\Auth::user()->id)->select(DB::raw('DATEDIFF(now(),created_at) as cdate'))->first();
-            }
-            $graph_users=['labels'=>$dates,'series'=>$user_series,'av_date'=>$av_user/$cdate->cdate];
-
+            $graph_users=['labels'=>$dates,'series'=>$user_series];
             $data[]=$graph_users;
         }
         if ($type=='all' || $type=='invoice') {

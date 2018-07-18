@@ -1431,59 +1431,6 @@
 	      </div>
 	    </div>
 	  </div>
-		<!-- Status Modal -->
-	  <div class="modal fade" id="status-user-modal" role="dialog">
-	    <div class="modal-dialog">
-	      <div class="modal-content">
-	      	@can('check-route','admin.users.delete')
-	         <form method="POST" action="" id="status-user-from">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        </div>
-	        <div class="modal-body" style="text-align: center;">
-			    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-			    <div class="form-group col-md-6">
-
-													<label for="inputState">@lang('common.activation_status')</label>
-
-													<div class="input-group">
-
-													   <span class="input-group-addon">
-
-															<i class="fa fa-user"></i>
-
-														</span>
-
-														<select class="form-control" name="activation_status" id="activation_status">
-
-																<option selected disabled>@lang('common.select_one')</option>
-
-																<option value="1">@lang('common.active')</option>
-
-																<option value="0">@lang('common.block')</option>
-
-														    </select>
-
-														<span class="text-danger role-error"></span>
-
-													</div>
-
-													
-
-												</div>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-default" data-dismiss="modal">@lang('common.close')</button>
-	          <button type="submit" class="btn btn-danger" >Update</button>
-	        </div>
-	        </form>
-	        @endcan
-			@cannot('check-route', 'admin.users.delete')
-			<b class="text-center">You are unauthorized for this tab.</b>
-			@endcannot
-	      </div>
-	    </div>
-	  </div>
 
 		<!-- Log Delete Modal -->
 	  <div class="modal fade" id="delete-log-modal" role="dialog">
@@ -1517,15 +1464,14 @@
 	    <div class="modal-dialog">
 	      <div class="modal-content">
 	      	@can('check-route','admin.users.block')
-	         <form method="POST" action="{{url('admin/block')}}" id="block-user-from">
+	         <form method="POST" action="" id="block-user-from">
 	        <div class="modal-header">
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	        <div class="modal-body" style="text-align: center;">
+			    <input type="hidden" name="_method" value="DELETE">
 			    <input type="hidden" name="_token" value="{{ csrf_token() }}">
 			    <p>Really want to block this profile?</p>
-
-			    <textarea rows="3" class="form-control" name="block_reason" placeholder="Enter block reason..."></textarea>
 	        </div>
 	        <div class="modal-footer">
 	          <button type="button" class="btn btn-default" data-dismiss="modal">@lang('common.close')</button>

@@ -458,9 +458,8 @@
                                     <div class="form-group{{ $errors->has('facebook') ? ' has-error' : '' }}">
                                         <label for="birthday" class="col-sm-2 control-label">Birthday</label>
                                         <div class="col-sm-10">
-                                            <div class="input-group date">
-                                                <input  type="text" id="userBirthDay" name="birthday" value="<?php echo date("d/m/Y", strtotime($user->birthday)); ?>" class="form-control" 
-                                                 data-plugin-datepicker data-plugin-options='{ "multidate": false }'  placeholder="dd.mm.yyyy">
+                                            <div class="input-group date" data-date-format="dd.mm.yyyy">
+                                                <input  type="text" id="userBirthDay" name="birthday" value="<?php echo date("d/m/Y", strtotime($user->birthday)); ?>" class="form-control" placeholder="dd.mm.yyyy">
                                                 <div class="input-group-addon" >
                                                     <span class="glyphicon glyphicon-th"></span>
                                                 </div>
@@ -494,9 +493,8 @@
                                     <div class="form-group{{ $errors->has('klant_sinds') ? ' has-error' : '' }}">
                                         <label for="klant_sinds" class="col-sm-2 control-label">Klant Sinds</label>
                                         <div class="col-sm-10">
-                                            <div class="input-group date " >
-                                                <input  type="text" id="klant_sinds" name="klant_sinds" value="<?php echo date("d/m/Y", strtotime($user->klant_sinds)); ?>" class="form-control" 
-                                                 data-plugin-datepicker data-plugin-options='{ "multidate": false }' placeholder="dd.mm.yyyy">
+                                            <div class="input-group date " data-date-format="dd.mm.yyyy">
+                                                <input  type="text" id="klant_sinds" name="klant_sinds" value="<?php echo date("d/m/Y", strtotime($user->klant_sinds)); ?>" class="form-control" placeholder="dd.mm.yyyy">
                                                 <div class="input-group-addon" >
                                                     <span class="glyphicon glyphicon-th"></span>
                                                 </div>

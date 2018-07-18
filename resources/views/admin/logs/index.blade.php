@@ -126,6 +126,12 @@
     <!-- Specific Page Vendor -->
         <script src="{{ asset('admin_files/vendor/select2/js/select2.js')}}"></script>
         <script src="{{ asset('admin_files/vendor/datatables/media/js/jquery.dataTables.min.js')}}"></script>
+
+        <!-- datatable implementing -->
+        <script src="code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+        <script src="cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css"></script>
+        <script src="cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+
         <script src="{{ asset('admin_files/vendor/datatables/media/js/dataTables.bootstrap4.min.js')}}"></script>
         <script src="{{ asset('admin_files/vendor/datatables/extras/TableTools/Buttons-1.4.2/js/dataTables.buttons.min.js')}}"></script>
         <script src="{{ asset('admin_files/vendor/datatables/extras/TableTools/Buttons-1.4.2/js/buttons.bootstrap4.min.js')}}"></script>
